@@ -2,13 +2,14 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { registerReducer, loginReducer } from './reducers/authReducers' 
-import { addNoteReducer } from './reducers/noteReducers'
+import { addNoteReducer, showNotesReducer } from './reducers/noteReducers'
 
 const reducer = combineReducers({
     userRegister : registerReducer,
     userLogin : loginReducer,
 
     userAddNote : addNoteReducer,
+    userShowNotes : showNotesReducer
 })
 
 const userInfoFromStorage = sessionStorage.getItem('userInfo') ? JSON.parse(sessionStorage.getItem('userInfo')) : null

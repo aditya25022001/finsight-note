@@ -27,4 +27,20 @@ const addNote = asyncHandler(async(req, res) => {
     })
 })
 
-export { addNote }
+const getNotes = asyncHandler(async(req, res) => {
+    const userId = req.user._id
+    const notes = await Note.find({ user:userId })
+    if(notes.length>0){
+        res.status(200).json({
+            message:"Found",
+            notes:notes
+        })
+    }
+    else{
+        res.json({
+            message:"No notes until now"
+        })
+    }
+})
+
+export { addNote, getNotes }
