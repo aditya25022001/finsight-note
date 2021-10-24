@@ -32,15 +32,15 @@ export const RegisterScreen = ({ history }) => {
                 <h3 className='mt-0 ml-2 mb-2'>Register</h3>
                 <Form.Group className='m-2 mt-3'>
                     <Form.Label>Name</Form.Label>
-                    <Form.Control value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Name" required />
+                    <Form.Control style={{ boxShadow:'none' }} value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Name" required />
                 </Form.Group> 
                 <Form.Group className='m-2'>
                     <Form.Label>Email</Form.Label>
-                    <Form.Control value={email} onChange={e => setEmail(e.target.value)} type="email" inputmode="email" placeholder="Email" required />
+                    <Form.Control style={{ boxShadow:'none' }} value={email} onChange={e => setEmail(e.target.value)} type="email" inputmode="email" placeholder="Email" required />
                 </Form.Group> 
                 <Form.Group className='m-2'>
                     <Form.Label>Password</Form.Label>
-                    <Form.Control value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="Password" required />
+                    <Form.Control style={{ boxShadow:'none' }} value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="Password" required />
                 </Form.Group>
                 <Form.Group className='m-2 mt-4'>
                     <Button variant="primary" style={{ width:'100%' }} type="submit">Register</Button>

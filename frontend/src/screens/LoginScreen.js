@@ -29,11 +29,11 @@ export const LoginScreen = ({ history }) => {
                 <h3 className='mt-0 ml-2 mb-2'>Login</h3>
                 <Form.Group className='m-2 mt-3'>
                     <Form.Label>Email</Form.Label>
-                    <Form.Control type="email" value={email} onChange={e => setEmail(e.target.value)} inputmode="email" placeholder="Email" required />
+                    <Form.Control style={{ boxShadow:'none' }} type="email" value={email} onChange={e => setEmail(e.target.value)} inputmode="email" placeholder="Email" required />
                 </Form.Group> 
                 <Form.Group className='m-2'>
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" required />
+                    <Form.Control style={{ boxShadow:'none' }} type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" required />
                 </Form.Group>
                 <Form.Group className='m-2 mt-4'>
                     <Button variant="primary" style={{ width:'100%' }} type="submit">Login</Button>

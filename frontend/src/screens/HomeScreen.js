@@ -4,7 +4,7 @@ import { AllNotes } from '../components/AllNotes'
 
 export const HomeScreen = () => {
     return (
-        <div className='d-grid w-100'>
+        <div className='d-flex w-100'>
             <Sidebar/>
             <AllNotes/>
         </div>

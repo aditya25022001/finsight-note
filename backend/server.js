@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import connectDB from './config/db.js'
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js'
 import authRoutes from './routes/authRoutes.js'
+import noteRoutes from './routes/noteRoutes.js'
 
 dotenv.config()
 
@@ -15,6 +16,8 @@ const app = express()
 app.use(express.json())
 
 app.use('/api/auth',authRoutes)
+
+app.use('/api/note',noteRoutes)
 
 app.get('/',(req,res) => res.send("Hello World!"))
 

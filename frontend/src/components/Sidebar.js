@@ -16,9 +16,14 @@ export const Sidebar = () => {
         dispatch(userLogoutAction())
     }
     return (
-        <div style={{ backgroundColor:'black', width:'max-content', color:'white', height:'100vh', position:'fixed', alignItems:'center', display:'flex', flexDirection:'column', padding:'0.5rem' }}>
-            <div style={{ cursor:'pointer' }} className='my-2 h4'>Nt</div>
-            <div style={{ cursor:'pointer' }} className='my-2'><CreateIcon /></div>
+        <div style={{ backgroundColor:'black', width:'max-content', color:'white', height:'100vh', position:'fixed', alignItems:'center', display:'flex', flexDirection:'column', padding:'0.8rem' }}>
+            <Link to='/' style={{ color:'white', textDecoration:'none' }}>
+                <div style={{ cursor:'pointer' }} className='my-2 h4'>Nt</div>
+            </Link>
+            {userInfo && 
+            <Link to='/addnote' style={{ color:'white' }}>
+                <div style={{ cursor:'pointer' }} className='my-2'><CreateIcon /></div>
+            </Link>}
             <div style={{ cursor:'pointer' }} className='my-2'><SearchIcon /></div>
             <div style={{ cursor:'pointer' }} className='my-2'><SettingsIcon /></div>
             {userInfo && <div style={{ cursor:'pointer' }} className='my-2' onClick={logoutHandler}><PowerSettingsNewIcon /></div>}

@@ -1,0 +1,3 @@
+export const ADD_NOTE_REQUEST = 'ADD_NOTE_REQUEST';
+export const ADD_NOTE_SUCCESS = 'ADD_NOTE_SUCCESS';
+export const ADD_NOTE_FAIL = 'ADD_NOTE_FAIL';
