@@ -1,8 +1,52 @@
-@media screen and (max-width:500px){
-    .formComponent, .alertMessage, .allNotes{
-        width:90% !important;
-    }
+*::-webkit-scrollbar{
+    display:none !important;
 }
 *{
     margin: 0 !important;
+}
+.note:hover{
+    background-color: rgb(236, 236, 236);
+}
+.newHomeWrapper{
+    left:5rem;
+    display: flex;
+    position:fixed;
+    overflow-y:scroll;
+    height:100vh !important;
+    width:100% !important;
+}
+.leftPanel{
+    flex:0.4 !important;
+    padding:0.8rem;
+    padding-top:2rem;
+}
+.rightPanel{
+    flex:0.6 !important;
+    padding-top:1rem;
+}
+@media screen and (max-width:600px){
+    .formComponent, .alertMessage, .allNotes{
+        width:90% !important;
+    }
+    .newHomeWrapper{
+        flex-direction: column;
+        overflow-y: scroll !important;
+        height:100% !important;
+        left:3.2rem;
+    }
+    .rightPanel{
+        padding-bottom:1rem;
+    }
+    .leftPanel{
+        height: 100% !important;
+    }
+    .buttonNote{
+        width:80%;
+    }
+    .searchBar{
+        width:88%;
+    }
+    .tableAllNotes{
+        width:85.2% !important;
+    }
 }

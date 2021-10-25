@@ -1,4 +1,4 @@
-import users from './data/users.js'
+import usersNote from './data/usersNote.js'
 import User from './models/userModel.js'
 import connectDB from './config/db.js'
 
@@ -7,7 +7,7 @@ connectDB()
 const importData = async () => {
     try {
         await User.deleteMany()
-        await User.insertMany(users)
+        await User.insertMany(usersNote)
         console.log("Data Added!")
         process.exit(0)
     } catch (error) {

@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 
-const users = [
+const usersNote = [
     {
         name:"Aditya Ubale",
         email:"adityaubale63@gmail.com",
@@ -18,4 +18,4 @@ const users = [
     }
 ]
 
-export default users
+export default usersNote

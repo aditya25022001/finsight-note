@@ -43,4 +43,26 @@ const getNotes = asyncHandler(async(req, res) => {
     }
 })
 
-export { addNote, getNotes }
+const updateNote = asyncHandler(async(req, res) => {
+    const { id, heading, content, tags } = req.body
+    const note = await Note.findById(id)
+    if(note){
+        note.noteHeading = heading || note.noteHeading
+        note.noteContent = content || note.noteContent
+        note.noteTags = tags || note.noteTags
+        note.user = note.user
+        const updatedNote = await note.save()
+        if(updatedNote){
+            res.status(200).json({
+                message:"Updated successfully",
+                id : updatedNote._id,
+                user : updatedNote.user 
+            })
+        }
+    }
+    else{
+        res.status(404).json({ message:"Note not found" })
+    }
+})
+
+export { addNote, getNotes, updateNote }
