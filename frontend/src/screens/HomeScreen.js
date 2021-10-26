@@ -90,7 +90,7 @@ export const HomeScreen = ({ history }) => {
                     : notes && notes.length>0
                     ?
                     <ListGroup style={{width:'96%' }} className='tableAllNotes rounded-0'>
-                        <ListGroup.Item className='py-1 px-3 rounded-0' style={{ display:'flex', justifyContent:'space-between' }}>
+                        <ListGroup.Item className='py-2 px-3 rounded-0' style={{ display:'flex', justifyContent:'space-between' }}>
                             <div className='h6'>Title</div>
                             <div className='h6'>Updated</div>
                         </ListGroup.Item>
