@@ -3,30 +3,102 @@
 }
 *{
     margin: 0 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 .note:hover{
-    background-color: rgb(236, 236, 236);
+    background-color: #007bff !important;
+    color:white !important;
+}
+.note:hover>.updatedTr{
+    color:white !important;
+}
+.updatedTr{
+    color: gray;
+}
+.newHome{
+    display: flex !important;
+}
+.tableAllNotes{
+    border: none !important;
+}
+.tags{
+    display: flex !important;
+    align-items: center !important;
+}
+.searchBar{
+    position:sticky !important;
+    z-index: 101;
+    background-color:white !important;
+    padding: 0.6rem 0.1rem;
+    box-shadow: 0px 1px 12px rgb(226, 226, 226) !important;
+}
+.headingRight{
+    box-shadow: 0px 1px 12px rgb(226, 226, 226) !important;
+    display: flex;
+    justify-content:space-between;
+    align-items:center;
 }
 .newHomeWrapper{
-    left:5rem;
     display: flex;
-    position:fixed;
-    overflow-y:scroll;
+    overflow-y:hidden !important;
     height:100vh !important;
     width:100% !important;
 }
 .leftPanel{
     flex:0.4 !important;
-    padding:0.8rem;
-    padding-top:2rem;
+    overflow-y: scroll !important;
 }
 .rightPanel{
+    overflow-y: scroll !important;
     flex:0.6 !important;
-    padding-top:1rem;
+}
+.tagsDivOne{
+    flex:0.5;
+}
+.buttonNote{
+    width:99.5%;
+}
+.badge, .bg-primary, .tagsDivOne>span{
+    border-radius: 2px !important;
+    color: #ffffff !important;
+    background-color: #00a2ff !important;
+    font-weight: 650;
+}
+.tagsDivTwo{
+    flex:0.5;
+    border-left:1px solid rgb(230, 230, 230);
+}
+.quill, .ql-editor, .ql-blank{
+    height:calc(100vh - 17.8rem) !important;
+    border:0px !important;
 }
 @media screen and (max-width:600px){
     .formComponent, .alertMessage, .allNotes{
         width:90% !important;
+    }
+    .tags{
+        flex-direction: column !important;
+    }
+    .headingRight{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding:0 1rem;
+    }
+    .headingRightOne{
+        display:flex;
+        align-items: center;
+    }
+    .headingRight-date{
+        margin-left:1rem !important;
+    }
+    .tagsDivOne, .tagsDivTwo{
+        flex:1 !important;
+        width: 100% !important;
+        border: none !important;
+    }
+    .tagsDivOne{
+        margin-top:1rem !important;
     }
     .newHomeWrapper{
         flex-direction: column;
@@ -35,18 +107,21 @@
         left:3.2rem;
     }
     .rightPanel{
+        border-top:1px solid rgb(182, 182, 182);
+        margin-top:5rem;
         padding-bottom:1rem;
     }
     .leftPanel{
-        height: 100% !important;
+        height: 100vh !important;
     }
     .buttonNote{
-        width:80%;
+        width:95%;
     }
     .searchBar{
         width:88%;
     }
     .tableAllNotes{
-        width:85.2% !important;
+        width:100% !important;
+        margin-bottom: 2rem !important;
     }
 }
