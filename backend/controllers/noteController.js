@@ -65,4 +65,32 @@ const updateNote = asyncHandler(async(req, res) => {
     }
 })
 
-export { addNote, getNotes, updateNote }
+const deleteNote = asyncHandler(async(req, res) => {
+    const { id } = req.params
+    const note = await Note.findById(id)
+    if(note){
+        const userId = note.user
+        const user = await User.findById(userId)
+        if(user){
+            user.name = user.name
+            user.email = user.email
+            user.password = user.password
+            user.notes = user.notes.filter(noteId => noteId.toString()!==id.toString())
+            const updatedUser = await user.save()
+            const updatedNotes = await note.remove()
+            if(updatedUser && updatedNotes){
+                res.status(200).json({
+                    message:"Note deleted successfully",
+                    ...updatedNotes
+                })
+            }
+        }
+    }
+    else{
+        res.status(404).json({ 
+            message:"Note not found" 
+        })
+    }
+})
+
+export { addNote, getNotes, updateNote, deleteNote }

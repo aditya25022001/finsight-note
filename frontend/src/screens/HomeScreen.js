@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Button, Table, Navbar, Badge } from 'react-bootstrap'
-import SearchIcon from '@material-ui/icons/Search';
-import { Tooltip } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
-import { addNoteAction, updateNoteAction } from '../actions/noteActions'
+import { addNoteAction, updateNoteAction, deleteNoteAction } from '../actions/noteActions'
+import { Loader } from '../components/Loader'
+import { Message } from '../components/Message'
+import { showNotesAction } from '../actions/noteActions'
+import { userLogoutAction } from '../actions/authActions'
+import { Link } from 'react-router-dom';
+import Tooltip from '@material-ui/core/Tooltip'
+import SearchIcon from '@material-ui/icons/Search';
 import LinkIcon from '@material-ui/icons/Link';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PrintIcon from '@material-ui/icons/Print';
-import { Loader } from '../components/Loader'
-import { Message } from '../components/Message'
-import { showNotesAction } from '../actions/noteActions'
 import CreateIcon from '@material-ui/icons/Create';
 import SettingsIcon from '@material-ui/icons/Settings';
-import { userLogoutAction } from '../actions/authActions'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
-import { Link } from 'react-router-dom';
 import EditIcon from '@material-ui/icons/Edit';
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
@@ -48,6 +48,9 @@ export const HomeScreen = ({ history }) => {
     const userUpdateNote = useSelector(state => state.userUpdateNote)
     const { laoding:loadingUpdate, error:errorUpdate, success:successUpdate } = userUpdateNote 
     
+    const userDeleteNote = useSelector(state => state.userDeleteNote)
+    const { loading:loadingDelete, error:errorDelete, success:successDelete } = userDeleteNote 
+
     useEffect(()=>{
         if(!userInfo){
             history.push('/')
@@ -55,7 +58,7 @@ export const HomeScreen = ({ history }) => {
         else{
             dispatch(showNotesAction())
         }
-        if(success || successUpdate){
+        if(success || successUpdate || successDelete){
             setNoteHeading("")
             setNoteContent("")
             setNoteTags("")
@@ -63,7 +66,7 @@ export const HomeScreen = ({ history }) => {
                 history.push('/')
             },3000)
         }
-    },[userInfo, history, success, dispatch, successUpdate])
+    },[userInfo, history, success, dispatch, successUpdate, successDelete])
     
     const addNoteHandler = (e) => {
         e.preventDefault()
@@ -105,6 +108,19 @@ export const HomeScreen = ({ history }) => {
         return `${date.slice(8)} ${months[parseInt(date.slice(5,7))-1]}  ${date.slice(2,4)}`
     }
 
+    const printHandler = (divName) => {
+        let printContents = document.getElementById(divName).children[1].innerHTML
+        let originalContents = document.body.innerHTML
+        document.body.innerHTML = printContents
+        window.print()
+        document.body.innerHTML = originalContents
+    }
+
+    const deleteNoteHandler = (e, id) => {
+        e.preventDefault()
+        dispatch(deleteNoteAction(id))
+    }
+
     return (
         <div className='newHome'>
             <div style={{ backgroundColor:'black', width:'max-content', color:'white', height:'100vh !important', alignItems:'center', display:'flex', flexDirection:'column', padding:'0.8rem 0.5rem' }}>
@@ -140,7 +156,7 @@ export const HomeScreen = ({ history }) => {
                             <EditIcon/>
                         </div>
                     </Navbar>
-                    {loadingShow 
+                    {(loadingShow || loadingDelete) 
                     ? <Loader />
                     : errorShow 
                     ? <Message message={errorShow} variant="danger" />
@@ -170,10 +186,11 @@ export const HomeScreen = ({ history }) => {
                     }
                 </div>
                 <div className='rightPanel'>
-                    {(loading || loadingUpdate) && <Loader/>}
-                    {(error || errorAddNote || errorUpdate) && <Message message={error || errorUpdate || "Note heading and content cannot be empty"} variant="danger" />}
+                    {(loading || loadingUpdate || loadingDelete) && <Loader/>}
+                    {(error || errorAddNote || errorUpdate || errorDelete) && <Message message={error || errorUpdate || errorDelete || "Note heading and content cannot be empty"} variant="danger" />}
                     {success && <Message message={note.message} variant="success" />}
                     {successUpdate && <Message message="Updated successfully" variant="success" />}
+                    {successDelete && <Message message="Deleted successfully" variant="success" />}
                     {!userInfo 
                     ?<Message variant='danger' message="Please login to add note" /> 
                     :<Form onSubmit={!update ? addNoteHandler : updateHandler} className='mx-auto'>
@@ -186,12 +203,13 @@ export const HomeScreen = ({ history }) => {
                                     {noteUpdatedAt ?  `UPDATED : ${noteUpdatedAt}` : date && `${date.toString().slice(8,10)} ${date.toString().slice(4,7)} ${date.toString().slice(13,15)}`}
                                 </div>
                             </div>
+                            {update && 
                             <div>
                                 {window.innerWidth>600 && <LinkIcon className='mx-2' style={{ fontSize:'1.5rem', cursor:'pointer' }} />}
                                 {window.innerWidth>600 && <GetAppIcon className='mx-2' style={{ fontSize:'1.3rem', cursor:'pointer' }} />}
-                                <DeleteIcon className='mx-2' style={{ fontSize:'1.3rem', cursor:'pointer' }} />
-                                {window.innerWidth>600 && <PrintIcon className='mx-2' style={{ fontSize:'1.3rem', cursor:'pointer' }} />}
-                            </div>
+                                <DeleteIcon className='mx-2' onClick={e => deleteNoteHandler(e, updateId)} style={{ fontSize:'1.3rem', cursor:'pointer' }} />
+                                {window.innerWidth>600 && <PrintIcon onClick={e => printHandler("print")} className='mx-2' style={{ fontSize:'1.3rem', cursor:'pointer' }} />}
+                            </div>}
                         </Form.Label>
                         <Form.Group className='py-3 pl-3 border-bottom'>
                             <Form.Control className='font-weight-bold' style={{ fontSize:'2rem', width:'100%', border:'none', outline:'none', boxShadow:'none' }} value={noteHeading} placeholder="Add Heading" onChange={e => setNoteHeading(e.target.value)} />
@@ -208,7 +226,7 @@ export const HomeScreen = ({ history }) => {
                                 </Tooltip>
                             </div>
                         </Form.Group>
-                        <ReactQuill value={noteContent} onChange={e => setNoteContent(e)}></ReactQuill>
+                        <ReactQuill value={noteContent} id="print" onChange={e => setNoteContent(e)}></ReactQuill>
                         <Form.Group className='mt-5 pt-0 pl-1 w-100'>
                             {!update 
                             ? <Button type='submit' className='buttonNote mx-auto' disabled={update} style={{ boxShadow:'none' }}>Add Note</Button>

@@ -1,5 +1,9 @@
-import { ADD_NOTE_REQUEST, ADD_NOTE_FAIL, ADD_NOTE_SUCCESS, SHOW_NOTES_REQUEST, SHOW_NOTES_FAIL, SHOW_NOTES_SUCCESS, UPDATE_NOTE_REQUEST, UPDATE_NOTE_FAIL, UPDATE_NOTE_SUCCESS, UPDATE_NOTE_RESET, ADD_NOTE_RESET } from "../constants/noteConstants";
+import { ADD_NOTE_REQUEST, ADD_NOTE_FAIL, ADD_NOTE_SUCCESS, SHOW_NOTES_REQUEST, SHOW_NOTES_FAIL, SHOW_NOTES_SUCCESS, UPDATE_NOTE_REQUEST, UPDATE_NOTE_FAIL, UPDATE_NOTE_SUCCESS, UPDATE_NOTE_RESET, ADD_NOTE_RESET, DELETE_NOTE_FAIL, DELETE_NOTE_SUCCESS, DELETE_NOTE_REQUEST } from "../constants/noteConstants";
 import axios from 'axios'
+
+// axios delete request only takes two parameters url and config(optional)
+// url/${} --> params 
+// url?${} --> query 
 
 export const addNoteAction = (heading, content, tags) => async (dispatch, getState) => {
     try {
@@ -75,6 +79,31 @@ export const updateNoteAction = (id, heading, content,tags) => async (dispatch, 
     } catch (error) {
         dispatch({
             type:UPDATE_NOTE_FAIL,
+            payload:error.response && error.response.data.message ? error.response.data.message : error.message
+        })
+    }
+}
+
+export const deleteNoteAction = (id) => async(dispatch, getState) => {
+    try {
+        dispatch({
+            type:DELETE_NOTE_REQUEST
+        })
+        const { userLogin : { userInfo } } = getState()
+        const config={
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${userInfo.token}`
+            }
+        }
+        const { data } = await axios.delete(`/api/note/deletenote/${id}`, config)
+        dispatch({
+            type:DELETE_NOTE_SUCCESS,
+            payload:data
+        })
+    } catch (error) {
+        dispatch({
+            type:DELETE_NOTE_FAIL,
             payload:error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }

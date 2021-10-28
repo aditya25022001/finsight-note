@@ -2,7 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { registerReducer, loginReducer } from './reducers/authReducers' 
-import { addNoteReducer, showNotesReducer, updateNoteReducer } from './reducers/noteReducers'
+import { addNoteReducer, showNotesReducer, updateNoteReducer, deleteNoteReducer } from './reducers/noteReducers'
 
 const reducer = combineReducers({
     userRegister : registerReducer,
@@ -10,7 +10,8 @@ const reducer = combineReducers({
 
     userAddNote : addNoteReducer,
     userShowNotes : showNotesReducer,
-    userUpdateNote : updateNoteReducer
+    userUpdateNote : updateNoteReducer,
+    userDeleteNote : deleteNoteReducer
 })
 
 const userInfoFromStorage = sessionStorage.getItem('userInfo') ? JSON.parse(sessionStorage.getItem('userInfo')) : null

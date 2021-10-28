@@ -1,4 +1,4 @@
-import { ADD_NOTE_REQUEST, ADD_NOTE_FAIL, ADD_NOTE_SUCCESS,ADD_NOTE_RESET, SHOW_NOTES_REQUEST, SHOW_NOTES_FAIL, SHOW_NOTES_SUCCESS, UPDATE_NOTE_REQUEST, UPDATE_NOTE_FAIL, UPDATE_NOTE_SUCCESS, UPDATE_NOTE_RESET} from '../constants/noteConstants'
+import { ADD_NOTE_REQUEST, ADD_NOTE_FAIL, ADD_NOTE_SUCCESS,ADD_NOTE_RESET, SHOW_NOTES_REQUEST, SHOW_NOTES_FAIL, SHOW_NOTES_SUCCESS, UPDATE_NOTE_REQUEST, UPDATE_NOTE_FAIL, UPDATE_NOTE_SUCCESS, UPDATE_NOTE_RESET, DELETE_NOTE_FAIL, DELETE_NOTE_SUCCESS, DELETE_NOTE_REQUEST } from '../constants/noteConstants'
 
 export const addNoteReducer = (state={},action) => {
     switch(action.type){
@@ -65,6 +65,28 @@ export const updateNoteReducer = (state={note:{}},action) => {
         case UPDATE_NOTE_RESET:
             return{
                 note:{}
+            }
+        default:
+            return state
+    }
+}
+
+export const deleteNoteReducer = (state={note:{}},action) => {
+    switch(action.type){
+        case DELETE_NOTE_REQUEST:
+            return {
+                loading:true
+            }
+        case DELETE_NOTE_SUCCESS:
+            return {
+                loading:false,
+                success:true,
+                note:action.payload
+            }
+        case DELETE_NOTE_FAIL:
+            return {
+                loading:false,
+                error:action.payload
             }
         default:
             return state
