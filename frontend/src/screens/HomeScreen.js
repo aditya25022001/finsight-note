@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Button, Table, Navbar, Badge } from 'react-bootstrap'
+import { Form, Button, Navbar, Badge } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNoteAction, updateNoteAction, deleteNoteAction } from '../actions/noteActions'
 import { Loader } from '../components/Loader'
@@ -27,6 +27,7 @@ export const HomeScreen = ({ history }) => {
     const [noteHeading, setNoteHeading] = useState("")
     const [noteContent, setNoteContent] = useState("")
     const [noteTags, setNoteTags] = useState("")
+    const [showNoteTags, setShowNoteTags] = useState([])
     const [update, setUpdate] = useState(false)
     const [updateId, setUpdateId] = useState("")
     const [errorAddNote, setErrorAddNote] = useState(false)
@@ -67,20 +68,24 @@ export const HomeScreen = ({ history }) => {
             },3000)
         }
     },[userInfo, history, success, dispatch, successUpdate, successDelete])
+
+    const tagsHandler = (e) => {
+        setNoteTags(e.target.value)
+        if(e.target.value.slice(-1)===','){
+            setNoteTags('')
+            setShowNoteTags([...showNoteTags,e.target.value.slice(0,-1)])
+            setNoteTags("")
+        }
+    }
     
     const addNoteHandler = (e) => {
         e.preventDefault()
         if(noteHeading!=="" && noteContent!==""){
-            dispatch(addNoteAction(noteHeading, noteContent, noteTags.split(',')))
+            dispatch(addNoteAction(noteHeading, noteContent, showNoteTags))
         }
         else{
             setErrorAddNote(true)
         }
-    }
-    
-    const updateHandler = (e) => {
-        e.preventDefault()
-        dispatch(updateNoteAction(updateId, noteHeading, noteContent, noteTags.split(',')))
     }
     
     const setUpdateHandler = (id, heading, content, tags, date) => {
@@ -89,7 +94,12 @@ export const HomeScreen = ({ history }) => {
         setNoteUpdatedAt(getDate(date))
         setNoteHeading(heading)
         setNoteContent(content)
-        setNoteTags(tags.join(','))
+        setShowNoteTags([...tags])
+    }
+
+    const updateHandler = (e) => {
+        e.preventDefault()
+        dispatch(updateNoteAction(updateId, noteHeading, noteContent, showNoteTags))
     }
 
     const logoutHandler = () => {
@@ -123,7 +133,7 @@ export const HomeScreen = ({ history }) => {
 
     return (
         <div className='newHome'>
-            <div style={{ backgroundColor:'black', width:'max-content', color:'white', height:'100vh !important', alignItems:'center', display:'flex', flexDirection:'column', padding:'0.8rem 0.5rem' }}>
+            <div style={{ backgroundColor:'black', width:'max-content', color:'white', height:'100vh !important', alignItems:'center', display:'flex', flexDirection:'column', padding:'0.3rem 0.5rem' }}>
                 <Link to='/' style={{ color:'white', textDecoration:'none' }}>
                     <div style={{ cursor:'pointer' }} className='my-2 h4'>Nt</div>
                 </Link>
@@ -144,9 +154,9 @@ export const HomeScreen = ({ history }) => {
                 }
             </div>
             <div className='newHomeWrapper'>
-                <div className='leftPanel border-right'>
+                <div className='leftPanel' style={{ borderRight:'1px solid rgb(235, 235, 235)' }}>
                     <Navbar fixed="top" className='d-flex w-100 searchBar' style={{ alignItems:'center' }} >
-                        <div style={{ flex:0.2, fontWeight:700, fontSize:'1.2rem', cursor:'pointer' }} className='text-center'>
+                        <div style={{ flex:0.2, fontWeight:500, fontSize:'1.2rem', cursor:'pointer' }} className='text-center'>
                             All Notes
                         </div>
                         <div style={{ flex:0.7 }}>
@@ -162,22 +172,20 @@ export const HomeScreen = ({ history }) => {
                     ? <Message message={errorShow} variant="danger" />
                     : notes && notes.length>0
                     ?
-                    <Table responsive striped size="sm" style={{width:'100%' }} className='tableAllNotes rounded-0'>
-                        <thead>
-                            <tr>
-                                <th className='pl-3'>TITLE</th>
-                                <th className='pr-3' style={{ textAlign:'right' }}>UPDATED</th>
-                            </tr>
-                        </thead>
-                        <tbody className='border-0'>
-                            {notes && notes.map(note => (
-                                <tr className='note border-0 p-0' key={note._id} onClick={e => setUpdateHandler(note._id, note.noteHeading, note.noteContent, note.noteTags, note.updatedAt.slice(0,10))} style={{ cursor:'pointer' }}>
-                                    <td className='pl-3 py-1' style={{ fontWeight:500 }}>{note.noteHeading}</td>
-                                    <td className='pr-3 py-1 updatedTr' style={{ textAlign:'right', fontWeight:500, fontSize:13 }}>{getDate(note.updatedAt.slice(0,10))}</td>
-                                </tr>
+                    <div style={{width:'100%', paddingTop:'0.5rem' }} className='tableAllNotes rounded-0'>
+                        <div style={{ display:'flex', justifyContent:'space-between', paddingBottom:'0.5rem' }}>
+                            <div className='pl-3'>TITLE</div>
+                            <div className='pr-3' style={{ textAlign:'right' }}>UPDATED</div>
+                        </div>
+                        <div className='border-0'>
+                            {notes && notes.map((note,index) => (
+                                <div className={index%2===0 ? 'note border-0 p-0 d-flex even' : 'note odd border-0 p-0 d-flex'} key={note._id} onClick={e => setUpdateHandler(note._id, note.noteHeading, note.noteContent, note.noteTags, note.updatedAt.slice(0,10))} style={{ cursor:'pointer', alignItems:'center', justifyContent:'space-between' }}>
+                                    <div className='pl-3 py-1' style={{ fontWeight:500 }}>{note.noteHeading}</div>
+                                    <div className='pr-3 py-1 updatedTr' style={{ textAlign:'right', fontWeight:500, fontSize:13 }}>{getDate(note.updatedAt.slice(0,10))}</div>
+                                </div>
                             ))}
-                        </tbody>
-                    </Table>
+                        </div>
+                    </div>
                     :
                     !userInfo 
                     ?<Message variant='danger' message="Please login to view you notes" /> 
@@ -194,9 +202,9 @@ export const HomeScreen = ({ history }) => {
                     {!userInfo 
                     ?<Message variant='danger' message="Please login to add note" /> 
                     :<Form onSubmit={!update ? addNoteHandler : updateHandler} className='mx-auto'>
-                        <Form.Label style={{ padding:'0.25rem 0.3rem 0.25rem 0.7rem', width:'100%' }} className='headingRight border-bottom'>
+                        <Form.Label style={{ padding:'0.25rem 0.3rem 0.25rem 0.7rem', width:'100%' }} className='headingRight'>
                             <div className='headingRightOne'>
-                                <div style={{ fontWeight:'700', fontSize:'1.29rem' }}>
+                                <div style={{ fontWeight:'500', fontSize:'1.29rem' }}>
                                     {update && noteHeading ? noteHeading : "Add Note"}
                                 </div>
                                 <div className='headingRight-date' style={{ color:'gray', fontWeight:'500', fontSize:'0.75rem' }}>
@@ -211,18 +219,18 @@ export const HomeScreen = ({ history }) => {
                                 {window.innerWidth>600 && <PrintIcon onClick={e => printHandler("print")} className='mx-2' style={{ fontSize:'1.3rem', cursor:'pointer' }} />}
                             </div>}
                         </Form.Label>
-                        <Form.Group className='py-3 pl-3 border-bottom'>
-                            <Form.Control className='font-weight-bold' style={{ fontSize:'2rem', width:'100%', border:'none', outline:'none', boxShadow:'none' }} value={noteHeading} placeholder="Add Heading" onChange={e => setNoteHeading(e.target.value)} />
+                        <Form.Group className='py-3 pl-3' style={{ borderBottom:'1px solid rgb(235, 235, 235)' }}>
+                            <Form.Control style={{ fontSize:'2rem', width:'100%', border:'none', outline:'none', boxShadow:'none', fontWeight:'500' }} value={noteHeading} placeholder="Add Heading" onChange={e => setNoteHeading(e.target.value)} />
                         </Form.Group>
-                        <Form.Group className='my-0 pl-3 tags border-bottom'>
+                        <Form.Group className='my-0 pl-3 tags' style={{ borderBottom:'1px solid rgb(235, 235, 235)' }}>
                             <div className='tagsDivOne'>
-                                {noteTags && noteTags.split(',').map(tag => (
-                                    <Badge className='p-1 mx-1' style={{ fontSize:'0.9rem' }}>{tag}</Badge>
+                                {showNoteTags.map((tag,index) => (
+                                    <Badge className='p-1 mx-1' key={index} style={{ fontSize:'0.85rem',backgroundColor:'#007bff !important', fontWeight:'500', textTransform:'uppercase' }}>{tag}</Badge>
                                 ))}
                             </div>
                             <div className='tagsDivTwo'>
                                 <Tooltip placement='top-start' title='comma separated values'>
-                                    <Form.Control style={{ width:'100%', border:'none', outline:'none', boxShadow:'none', fontSize:'1.1rem' }} value={noteTags} placeholder="Add Tags" onChange={e => setNoteTags(e.target.value)} />
+                                    <Form.Control style={{ width:'100%', border:'none', outline:'none', boxShadow:'none', fontSize:'1.1rem' }} value={noteTags} placeholder="Add Tags" onChange={e => tagsHandler(e)} />
                                 </Tooltip>
                             </div>
                         </Form.Group>
