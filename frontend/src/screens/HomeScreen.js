@@ -28,6 +28,7 @@ export const HomeScreen = ({ history }) => {
     const [noteContent, setNoteContent] = useState("")
     const [noteTags, setNoteTags] = useState("")
     const [showNoteTags, setShowNoteTags] = useState([])
+    const [addNote, setAddNote] = useState(false)
     const [update, setUpdate] = useState(false)
     const [updateId, setUpdateId] = useState("")
     const [errorAddNote, setErrorAddNote] = useState(false)
@@ -63,6 +64,7 @@ export const HomeScreen = ({ history }) => {
             setNoteHeading("")
             setNoteContent("")
             setNoteTags("")
+            setShowNoteTags([])
             setTimeout(()=>{
                 history.push('/')
             },3000)
@@ -95,6 +97,7 @@ export const HomeScreen = ({ history }) => {
         setNoteHeading(heading)
         setNoteContent(content)
         setShowNoteTags([...tags])
+        setAddNote(true)
     }
 
     const updateHandler = (e) => {
@@ -131,13 +134,22 @@ export const HomeScreen = ({ history }) => {
         dispatch(deleteNoteAction(id))
     }
 
+    const newNoteHandler = (e) => {
+        setUpdate(false)
+        setNoteHeading("")
+        setNoteContent("")
+        setNoteTags("")
+        setShowNoteTags([])
+        setAddNote(true)
+    }
+
     return (
         <div className='newHome'>
             <div style={{ backgroundColor:'black', width:'max-content', color:'white', height:'100vh !important', alignItems:'center', display:'flex', flexDirection:'column', padding:'0.3rem 0.5rem' }}>
                 <Link to='/' style={{ color:'white', textDecoration:'none' }}>
                     <div style={{ cursor:'pointer' }} className='my-2 h4'>Nt</div>
                 </Link>
-                <div style={{ cursor:'pointer' }} className='my-2'><CreateIcon /></div>
+                <div style={{ cursor:'pointer' }} className='my-2' onClick={e => newNoteHandler(e)} ><CreateIcon /></div>
                 <div style={{ cursor:'pointer' }} className='my-2'><SearchIcon /></div>
                 <div style={{ cursor:'pointer' }} className='my-2'><SettingsIcon /></div>
                 {userInfo && 
@@ -201,14 +213,14 @@ export const HomeScreen = ({ history }) => {
                     {successDelete && <Message message="Deleted successfully" variant="success" />}
                     {!userInfo 
                     ?<Message variant='danger' message="Please login to add note" /> 
-                    :<Form onSubmit={!update ? addNoteHandler : updateHandler} className='mx-auto'>
+                    :<Form  onSubmit={!update ? addNoteHandler : updateHandler} className={addNote || update ? 'mx-auto' : 'mx-auto disabledform'}>
                         <Form.Label style={{ padding:'0.25rem 0.3rem 0.25rem 0.7rem', width:'100%' }} className='headingRight'>
                             <div className='headingRightOne'>
                                 <div style={{ fontWeight:'500', fontSize:'1.29rem' }}>
                                     {update && noteHeading ? noteHeading : "Add Note"}
                                 </div>
                                 <div className='headingRight-date' style={{ color:'gray', fontWeight:'500', fontSize:'0.75rem' }}>
-                                    {noteUpdatedAt ?  `UPDATED : ${noteUpdatedAt}` : date && `${date.toString().slice(8,10)} ${date.toString().slice(4,7)} ${date.toString().slice(13,15)}`}
+                                    {update && noteUpdatedAt ?  `UPDATED : ${noteUpdatedAt}` : date && `${date.toString().slice(8,10)} ${date.toString().slice(4,7)} ${date.toString().slice(13,15)}`}
                                 </div>
                             </div>
                             {update && 
@@ -220,7 +232,7 @@ export const HomeScreen = ({ history }) => {
                             </div>}
                         </Form.Label>
                         <Form.Group className='py-3 pl-3' style={{ borderBottom:'1px solid rgb(235, 235, 235)' }}>
-                            <Form.Control style={{ fontSize:'2rem', width:'100%', border:'none', outline:'none', boxShadow:'none', fontWeight:'500' }} value={noteHeading} placeholder="Add Heading" onChange={e => setNoteHeading(e.target.value)} />
+                            <Form.Control disabled={!addNote && !update} style={{ fontSize:'2rem', width:'100%', border:'none', outline:'none', boxShadow:'none', fontWeight:'500' }} value={noteHeading} placeholder="Add Heading" onChange={e => setNoteHeading(e.target.value)} />
                         </Form.Group>
                         <Form.Group className='my-0 pl-3 tags' style={{ borderBottom:'1px solid rgb(235, 235, 235)' }}>
                             <div className='tagsDivOne'>
@@ -230,14 +242,14 @@ export const HomeScreen = ({ history }) => {
                             </div>
                             <div className='tagsDivTwo'>
                                 <Tooltip placement='top-start' title='comma separated values'>
-                                    <Form.Control style={{ width:'100%', border:'none', outline:'none', boxShadow:'none', fontSize:'1.1rem' }} value={noteTags} placeholder="Add Tags" onChange={e => tagsHandler(e)} />
+                                    <Form.Control disabled={!addNote && !update} style={{ width:'100%', border:'none', outline:'none', boxShadow:'none', fontSize:'1.1rem' }} value={noteTags} placeholder="Add Tags" onChange={e => tagsHandler(e)} />
                                 </Tooltip>
                             </div>
                         </Form.Group>
-                        <ReactQuill value={noteContent} id="print" onChange={e => setNoteContent(e)}></ReactQuill>
+                        <ReactQuill readOnly={!addNote && !update} value={noteContent} id="print" onChange={e => setNoteContent(e)}></ReactQuill>
                         <Form.Group className='mt-5 pt-0 pl-1 w-100'>
                             {!update 
-                            ? <Button type='submit' className='buttonNote mx-auto' disabled={update} style={{ boxShadow:'none' }}>Add Note</Button>
+                            ? <Button type='submit' className='buttonNote mx-auto' disabled={!addNote} style={{ boxShadow:'none' }}>Add Note</Button>
                             : <Button type='submit' className='buttonNote mx-auto' style={{ boxShadow:'none' }}>Update Note</Button>}
                         </Form.Group>
                     </Form>}
