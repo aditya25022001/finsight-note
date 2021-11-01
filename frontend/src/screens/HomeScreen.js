@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Form, Button, Navbar, Badge } from 'react-bootstrap'
+import React, { useState, useEffect, useCallback } from 'react'
+import { Form, Navbar, Badge } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNoteAction, updateNoteAction, deleteNoteAction } from '../actions/noteActions'
 import { Loader } from '../components/Loader'
@@ -33,7 +33,6 @@ export const HomeScreen = ({ history }) => {
     const [updateId, setUpdateId] = useState("")
     const [errorAddNote, setErrorAddNote] = useState(false)
     const [noteUpdatedAt, setNoteUpdatedAt] = useState("")
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     
     const dispatch = useDispatch()
 
@@ -41,14 +40,14 @@ export const HomeScreen = ({ history }) => {
     const { userInfo } = userLogin
     
     const userShowNotes = useSelector(state => state.userShowNotes)
-    const { loading:loadingShow, error:errorShow, notes } = userShowNotes
+    const { error:errorShow, notes } = userShowNotes
     
     const userAddNote = useSelector(state => state.userAddNote)
     const { loading, error, success, note } = userAddNote
     
     
     const userUpdateNote = useSelector(state => state.userUpdateNote)
-    const { laoding:loadingUpdate, error:errorUpdate, success:successUpdate } = userUpdateNote 
+    const { laoding:loadingUpdate, error:errorUpdate } = userUpdateNote 
     
     const userDeleteNote = useSelector(state => state.userDeleteNote)
     const { loading:loadingDelete, error:errorDelete, success:successDelete } = userDeleteNote 
@@ -60,7 +59,7 @@ export const HomeScreen = ({ history }) => {
         else{
             dispatch(showNotesAction())
         }
-        if(success || successUpdate || successDelete){
+        if(successDelete){
             setNoteHeading("")
             setNoteContent("")
             setNoteTags("")
@@ -69,7 +68,7 @@ export const HomeScreen = ({ history }) => {
                 history.push('/')
             },3000)
         }
-    },[userInfo, history, success, dispatch, successUpdate, successDelete])
+    },[userInfo, history, dispatch, successDelete])
 
     const tagsHandler = (e) => {
         setNoteTags(e.target.value)
@@ -77,16 +76,6 @@ export const HomeScreen = ({ history }) => {
             setNoteTags('')
             setShowNoteTags([...showNoteTags,e.target.value.slice(0,-1)])
             setNoteTags("")
-        }
-    }
-    
-    const addNoteHandler = (e) => {
-        e.preventDefault()
-        if(noteHeading!=="" && noteContent!==""){
-            dispatch(addNoteAction(noteHeading, noteContent, showNoteTags))
-        }
-        else{
-            setErrorAddNote(true)
         }
     }
     
@@ -98,11 +87,6 @@ export const HomeScreen = ({ history }) => {
         setNoteContent(content)
         setShowNoteTags([...tags])
         setAddNote(true)
-    }
-
-    const updateHandler = (e) => {
-        e.preventDefault()
-        dispatch(updateNoteAction(updateId, noteHeading, noteContent, showNoteTags))
     }
 
     const logoutHandler = () => {
@@ -117,9 +101,10 @@ export const HomeScreen = ({ history }) => {
 
     const date = new Date()
 
-    const getDate = (date) => {
+    const getDate = useCallback((date) => {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
         return `${date.slice(8)} ${months[parseInt(date.slice(5,7))-1]}  ${date.slice(2,4)}`
-    }
+    },[])
 
     const printHandler = (divName) => {
         let printContents = document.getElementById(divName).children[1].innerHTML
@@ -131,6 +116,8 @@ export const HomeScreen = ({ history }) => {
 
     const deleteNoteHandler = (e, id) => {
         e.preventDefault()
+        setUpdate(false)
+        setAddNote(false)
         dispatch(deleteNoteAction(id))
     }
 
@@ -141,7 +128,29 @@ export const HomeScreen = ({ history }) => {
         setNoteTags("")
         setShowNoteTags([])
         setAddNote(true)
+        dispatch(addNoteAction("Untitled","Untitled"))
     }
+
+    useEffect(() => {
+        if(success){
+            if(note){
+                setUpdateId(note.noteId)
+                setNoteHeading(note.noteHeading)
+                setNoteContent(note.noteContent)
+                setShowNoteTags(note.noteTags)
+                setNoteUpdatedAt(getDate(note.updatedAt.slice(0,10)))
+            }
+            setUpdate(true)
+        }
+    },[success,note,getDate])
+
+    useEffect(()=>{
+        if(update){
+            setTimeout(()=>{
+                dispatch(updateNoteAction(updateId, noteHeading, noteContent, showNoteTags))
+            },1000)
+        }
+    },[updateId, noteHeading, noteContent, showNoteTags, dispatch, update])
 
     return (
         <div className='newHome'>
@@ -149,7 +158,9 @@ export const HomeScreen = ({ history }) => {
                 <Link to='/' style={{ color:'white', textDecoration:'none' }}>
                     <div style={{ cursor:'pointer' }} className='my-2 h4'>Nt</div>
                 </Link>
-                <div style={{ cursor:'pointer' }} className='my-2' onClick={e => newNoteHandler(e)} ><CreateIcon /></div>
+                <Tooltip title="Add new note" placement="right">
+                    <div style={{ cursor:'pointer' }} className='my-2' onClick={e => newNoteHandler(e)} ><CreateIcon /></div>
+                </Tooltip>
                 <div style={{ cursor:'pointer' }} className='my-2'><SearchIcon /></div>
                 <div style={{ cursor:'pointer' }} className='my-2'><SettingsIcon /></div>
                 {userInfo && 
@@ -178,7 +189,7 @@ export const HomeScreen = ({ history }) => {
                             <EditIcon/>
                         </div>
                     </Navbar>
-                    {(loadingShow || loadingDelete) 
+                    {loadingDelete
                     ? <Loader />
                     : errorShow 
                     ? <Message message={errorShow} variant="danger" />
@@ -208,12 +219,10 @@ export const HomeScreen = ({ history }) => {
                 <div className='rightPanel'>
                     {(loading || loadingUpdate || loadingDelete) && <Loader/>}
                     {(error || errorAddNote || errorUpdate || errorDelete) && <Message message={error || errorUpdate || errorDelete || "Note heading and content cannot be empty"} variant="danger" />}
-                    {success && <Message message={note.message} variant="success" />}
-                    {successUpdate && <Message message="Updated successfully" variant="success" />}
                     {successDelete && <Message message="Deleted successfully" variant="success" />}
                     {!userInfo 
                     ?<Message variant='danger' message="Please login to add note" /> 
-                    :<Form  onSubmit={!update ? addNoteHandler : updateHandler} className={addNote || update ? 'mx-auto' : 'mx-auto disabledform'}>
+                    :<Form className={addNote || update ? 'mx-auto' : 'mx-auto disabledform'}>
                         <Form.Label style={{ padding:'0.25rem 0.3rem 0.25rem 0.7rem', width:'100%' }} className='headingRight'>
                             <div className='headingRightOne'>
                                 <div style={{ fontWeight:'500', fontSize:'1.29rem' }}>
@@ -247,11 +256,6 @@ export const HomeScreen = ({ history }) => {
                             </div>
                         </Form.Group>
                         <ReactQuill readOnly={!addNote && !update} value={noteContent} id="print" onChange={e => setNoteContent(e)}></ReactQuill>
-                        <Form.Group className='mt-5 pt-0 pl-1 w-100'>
-                            {!update 
-                            ? <Button type='submit' className='buttonNote mx-auto' disabled={!addNote} style={{ boxShadow:'none' }}>Add Note</Button>
-                            : <Button type='submit' className='buttonNote mx-auto' style={{ boxShadow:'none' }}>Update Note</Button>}
-                        </Form.Group>
                     </Form>}
                 </div>   
             </div>

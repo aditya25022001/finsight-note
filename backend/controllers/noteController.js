@@ -24,6 +24,10 @@ const addNote = asyncHandler(async(req, res) => {
         userId : updatedUser._id,
         noteId : createNote._id,
         userNotes : updatedUser.notes,
+        noteHeading:createNote.noteHeading,
+        noteContent : createNote.noteContent,
+        noteTags : createNote.noteTags,
+        updatedAt : createNote.updatedAt
     })
 })
 
