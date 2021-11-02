@@ -3,18 +3,22 @@ import axios from 'axios'
 
 export const registerAction = createAsyncThunk(
     'user/register',
-    async({name, email, password}) => {
+    async({name, email, password},{rejectWithValue}) => {
         const config = {
             headers:{
                 'Content-Type': 'application/json'
             }
         }
-        const { data } = await axios.post('/api/auth/register',{ name,email,password }, config)
-        if(data){
-            await axios.post('/api/auth/login',{ email,password }, config)
-            sessionStorage.setItem("userInfo",JSON.stringify(data))
+        try {
+            const { data } = await axios.post('/api/auth/register',{ name,email,password }, config)
+            if(data){
+                await axios.post('/api/auth/login',{ email,password }, config)
+                sessionStorage.setItem("userInfo",JSON.stringify(data))
+            }
+            return data
+        } catch (err) {
+            return rejectWithValue(err.response.data)
         }
-        return data
     }
 )
 
@@ -35,7 +39,7 @@ export const registerSlice = createSlice({
         },
         [registerAction.rejected]:(state, action) => {
             state.loading=false
-            state.error=action.payload            
+            state.error=action.payload.message    
         }
     }
 })

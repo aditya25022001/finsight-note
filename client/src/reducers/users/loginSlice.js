@@ -3,15 +3,19 @@ import axios from 'axios'
 
 export const loginAction = createAsyncThunk(
     'user/login',
-    async ({email, password}) => {
+    async ({email, password},{ rejectWithValue }) => {
         const config = {
             headers:{
                 'Content-Type': 'application/json'
             }
         }
-        const { data } = await axios.post('/api/auth/login',{ email, password }, config)
-        sessionStorage.setItem("userInfo",JSON.stringify(data))
-        return data
+        try {
+            const { data } = await axios.post('/api/auth/login',{ email, password }, config)
+            sessionStorage.setItem("userInfo",JSON.stringify(data))
+            return data
+        } catch (err) {
+            return rejectWithValue(err.response.data)
+        }
     }
 )
 
@@ -32,7 +36,7 @@ export const loginSlice = createSlice({
         },
         [loginAction.rejected]:(state, action) => {
             state.loading=false
-            state.error=action.payload            
+            state.error=action.payload.message    
         }
     }
 })
