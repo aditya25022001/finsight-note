@@ -19,6 +19,13 @@ export const loginAction = createAsyncThunk(
     }
 )
 
+export const logoutAction = createAsyncThunk(
+    'user/logout',
+    async () => {
+        sessionStorage.removeItem('userInfo')
+    }
+)
+
 export const loginSlice = createSlice({
     name:"userLogin",
     initialState:{
@@ -37,6 +44,17 @@ export const loginSlice = createSlice({
         [loginAction.rejected]:(state, action) => {
             state.loading=false
             state.error=action.payload.message    
+        },
+        [logoutAction.pending]:(state) => {
+            state.loading=true
+        },
+        [logoutAction.fulfilled]:(state) => {
+            state.loading=false
+            state.userInfo=null
+        },
+        [logoutAction.rejected]:(state) => {
+            state.loading=false
+            state.error="Error logging out"
         }
     }
 })

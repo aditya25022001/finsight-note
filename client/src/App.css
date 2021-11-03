@@ -80,6 +80,8 @@ input:disabled::placeholder{
 }
 .tagsDivOne{
   flex:0.7;
+  display: flex;
+  justify-content:flex-start;
 }
 .tagsDivOne>span, .badge, .bg-primary{
   background-color:#007bff !important;

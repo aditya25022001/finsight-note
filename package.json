@@ -11,6 +11,7 @@
     "client": "npm start --prefix client",
     "devf": "concurrently \"npm run server\" \"npm run frontend\"",
     "devt": "concurrently \"npm run server\" \"npm run client\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run frontend\"",
     "import": "node backend/seeder",
     "destroy": "node backend/seeder -d"
   },

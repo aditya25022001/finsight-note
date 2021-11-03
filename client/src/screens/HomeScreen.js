@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Form, Navbar, Badge } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { addNoteAction, updateNoteAction, deleteNoteAction } from '../actions/noteActions'
 import { Loader } from '../components/Loader'
 import { Message } from '../components/Message'
-import { showNotesAction } from '../actions/noteActions'
-import { userLogoutAction } from '../actions/authActions'
+import { addNoteAction } from '../reducers/notes/addNoteSlice'
+import { updateNoteAction } from '../reducers/notes/updateNoteSlice'
+import { deleteNoteAction } from '../reducers/notes/deleteNoteSlice'
+import { showNotesAction } from '../reducers/notes/showNoteSlice'
+import { logoutAction } from '../reducers/users/loginSlice'
 import { Link } from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip'
 import SearchIcon from '@material-ui/icons/Search';
@@ -46,7 +48,6 @@ export const HomeScreen = ({ history }) => {
     const userAddNote = useSelector(state => state.userAddNote)
     const { loading, error, success, note } = userAddNote
     
-    
     const userUpdateNote = useSelector(state => state.userUpdateNote)
     const { laoding:loadingUpdate, error:errorUpdate } = userUpdateNote 
     
@@ -58,7 +59,7 @@ export const HomeScreen = ({ history }) => {
             history.push('/')
         }
         else{
-            dispatch(showNotesAction())
+            dispatch(showNotesAction(userInfo._id))
         }
         if(successDelete){
             setNoteHeading("")
@@ -91,7 +92,8 @@ export const HomeScreen = ({ history }) => {
     }
 
     const logoutHandler = () => {
-        dispatch(userLogoutAction())
+        console.log("logged out")
+        dispatch(logoutAction())
     }
     
     if(errorAddNote){
@@ -129,9 +131,9 @@ export const HomeScreen = ({ history }) => {
         setNoteTags("")
         setShowNoteTags([])
         setAddNote(true)
-        dispatch(addNoteAction("Untitled","Untitled"))
+        dispatch(addNoteAction({heading:"Untitled",content:"Untitled"}))
     }
-
+    
     useEffect(() => {
         if(success){
             if(note){
@@ -148,15 +150,15 @@ export const HomeScreen = ({ history }) => {
     useEffect(()=>{
         if(update){
             setTimeout(()=>{
-                dispatch(updateNoteAction(updateId, noteHeading, noteContent, showNoteTags))
+                dispatch(updateNoteAction({id:updateId, heading:noteHeading, content:noteContent, tags:showNoteTags}))
             },1000)
         }
-    },[updateId, noteHeading, noteContent, showNoteTags, dispatch, update])
+    },[updateId, noteHeading, dispatch, update, noteContent, showNoteTags])
 
     const deleteTagHandler = (tag) => {
         setShowNoteTags(showNoteTags.filter(eachTag => eachTag!==tag))
     }
-    
+
     return (
         <div className='newHome'>
             <div style={{ backgroundColor:'black', width:'max-content', color:'white', height:'100vh !important', alignItems:'center', display:'flex', flexDirection:'column', padding:'0.3rem 0.5rem' }}>
