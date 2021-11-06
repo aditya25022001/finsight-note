@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import { Badge, Form, Navbar } from 'react-bootstrap'
 import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
@@ -9,23 +9,6 @@ import 'react-quill/dist/quill.snow.css';
 export const SidePanel = () => {
     const [showNoteTags] = useState(['react', 'gatsby', 'intern'])
     const deleteTagHandler = () => {}
-    const imageHandler = () => { 
-        document.getElementById('inpfile').click()
-    }
-    const modules = useMemo(() => ({
-        toolbar: {
-          container: [
-            [{ header: [1, 2, 3, 4, 5, 6] }],
-            ['bold', 'italic', 'underline'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['image', 'code-block'],
-            ['link']
-          ],
-          handlers: {
-            image: imageHandler
-          }
-        }
-      }), [])
     return (
         <div style={{ width:"33%", display: "flex", float:'right', height:'100vh', flexDirection:'column', position:'fixed', right:0, overflowY:'scroll' }} className='border-left'>
             <Navbar fixed="top" className='d-flex w-100 searchBarSidePanel' style={{ alignItems:'center', height:'max-content', backgroundColor:'green' }} >
@@ -60,8 +43,7 @@ export const SidePanel = () => {
                         <Form.Control  style={{ width:'100%', border:'none', outline:'none', boxShadow:'none', fontSize:'1.1rem' }} placeholder="Add Tags" />
                     </Tooltip>
                 </div>
-                <input type='file' id='inpfile' style={{ display:'none' }} />
-                <ReactQuill modules={modules} ></ReactQuill>
+                <ReactQuill></ReactQuill>
             </div>
         </div>
     )

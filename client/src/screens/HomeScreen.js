@@ -158,7 +158,9 @@ export const HomeScreen = ({ history }) => {
     const deleteTagHandler = (tag) => {
         setShowNoteTags(showNoteTags.filter(eachTag => eachTag!==tag))
     }
-    const imageHandler = () => { console.log("image") }
+    const imageHandler = () => { 
+        document.getElementById('inputimage').click()
+    }
     const modules = useMemo(() => ({
         toolbar: {
           container: [
@@ -173,6 +175,11 @@ export const HomeScreen = ({ history }) => {
           }
         }
       }), [])
+
+      const uploadHandler = async (e) => {
+        e.preventDefault();
+        console.log(e.target.files[0])
+      }
 
     return (
         <div className='newHome'>
@@ -284,6 +291,7 @@ export const HomeScreen = ({ history }) => {
                                 </Tooltip>
                             </div>
                         </Form.Group>
+                        <input type='file' accept='image/*' id='inputimage' style={{ display:'none' }} onChange={uploadHandler} />
                         <ReactQuill modules={modules} readOnly={!addNote && !update} value={noteContent} id="print" onChange={e => setNoteContent(e)}></ReactQuill>
                     </Form>}
                 </div>   
