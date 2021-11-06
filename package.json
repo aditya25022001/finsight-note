@@ -7,11 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon backend/server",
-    "frontend": "npm start --prefix frontend",
     "client": "npm start --prefix client",
-    "devf": "concurrently \"npm run server\" \"npm run frontend\"",
-    "devt": "concurrently \"npm run server\" \"npm run client\"",
-    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run frontend\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "import": "node backend/seeder",
     "destroy": "node backend/seeder -d"
   },
