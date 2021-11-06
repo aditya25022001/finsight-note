@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { Form, Navbar, Badge } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Loader } from '../components/Loader'
@@ -158,6 +158,21 @@ export const HomeScreen = ({ history }) => {
     const deleteTagHandler = (tag) => {
         setShowNoteTags(showNoteTags.filter(eachTag => eachTag!==tag))
     }
+    const imageHandler = () => { console.log("image") }
+    const modules = useMemo(() => ({
+        toolbar: {
+          container: [
+            [{ header: [1, 2, 3, 4, 5, 6] }],
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['image', 'code-block'],
+            ['link']
+          ],
+          handlers: {
+            image: imageHandler
+          }
+        }
+      }), [])
 
     return (
         <div className='newHome'>
@@ -254,10 +269,10 @@ export const HomeScreen = ({ history }) => {
                             <div className='tagsDivOne'>
                                 {showNoteTags.map((tag,index) => (
                                     <div>
-                                        <Badge className='p-1 mx-1' key={index} style={{ fontSize:'0.85rem',backgroundColor:'#007bff !important', fontWeight:'500', textTransform:'uppercase', alignItems:'center', display:'flex' }}>
+                                        <Badge className='p-1 mx-1' key={index} style={{ fontSize:'0.85rem', fontWeight:'500', textTransform:'uppercase', alignItems:'center', display:'flex' }}>
                                             {tag}
                                             <span className='ml-1'>
-                                                <CloseIcon style={{ color:'#007bff', fontSize:'0.8rem', cursor:'pointer', backgroundColor:'lightblue', borderRadius:'50%' }} onClick={e => deleteTagHandler(tag)} />
+                                                <CloseIcon style={{ color:'#007bff', fontSize:'0.8rem', cursor:'pointer', backgroundColor:'#c5ebff', borderRadius:'50%' }} onClick={e => deleteTagHandler(tag)} />
                                             </span>
                                         </Badge>
                                     </div>
@@ -269,7 +284,7 @@ export const HomeScreen = ({ history }) => {
                                 </Tooltip>
                             </div>
                         </Form.Group>
-                        <ReactQuill readOnly={!addNote && !update} value={noteContent} id="print" onChange={e => setNoteContent(e)}></ReactQuill>
+                        <ReactQuill modules={modules} readOnly={!addNote && !update} value={noteContent} id="print" onChange={e => setNoteContent(e)}></ReactQuill>
                     </Form>}
                 </div>   
             </div>

@@ -25,7 +25,8 @@ const addNoteSlice = createSlice({
     initialState:{
         loading:false,
         error:null,
-        note:null
+        note:null,
+        success:false
     },
     extraReducers:{
         [addNoteAction.pending]:(state) => {
@@ -34,6 +35,7 @@ const addNoteSlice = createSlice({
         [addNoteAction.fulfilled]:(state, action) => {
             state.loading = false
             state.note = action.payload
+            state.success=true
         },
         [addNoteAction.rejected]:(state, action) => {
             state.loading=false

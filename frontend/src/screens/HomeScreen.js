@@ -252,10 +252,10 @@ export const HomeScreen = ({ history }) => {
                             <div className='tagsDivOne'>
                                 {showNoteTags.map((tag,index) => (
                                     <div>
-                                        <Badge className='p-1 mx-1' key={index} style={{ fontSize:'0.85rem',backgroundColor:'#007bff !important', fontWeight:'500', textTransform:'uppercase', alignItems:'center', display:'flex' }}>
+                                        <Badge className='p-1 mx-1' key={index} style={{ fontSize:'0.85rem', fontWeight:'500', textTransform:'uppercase', alignItems:'center', display:'flex' }}>
                                             {tag}
                                             <span className='ml-1'>
-                                                <CloseIcon style={{ color:'#007bff', fontSize:'0.8rem', cursor:'pointer', backgroundColor:'lightblue', borderRadius:'50%' }} onClick={e => deleteTagHandler(tag)} />
+                                                <CloseIcon style={{ color:'#007bff', fontSize:'0.8rem', cursor:'pointer', backgroundColor:'#c5ebff', borderRadius:'50%' }} onClick={e => deleteTagHandler(tag)} />
                                             </span>
                                         </Badge>
                                     </div>
