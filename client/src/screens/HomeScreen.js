@@ -9,6 +9,7 @@ import { deleteNoteAction } from '../reducers/notes/deleteNoteSlice'
 import { showNotesAction } from '../reducers/notes/showNoteSlice'
 import { logoutAction } from '../reducers/users/loginSlice'
 import { Link } from 'react-router-dom';
+import { debounce } from 'lodash'
 import Tooltip from '@material-ui/core/Tooltip'
 import SearchIcon from '@material-ui/icons/Search';
 import LinkIcon from '@material-ui/icons/Link';
@@ -147,13 +148,13 @@ export const HomeScreen = ({ history }) => {
         }
     },[success,note,getDate])
 
+    const delayedQuery = useCallback(() => debounce((updateId, noteHeading, noteContent, showNoteTags) => dispatch(updateNoteAction({id:updateId, heading:noteHeading, content:noteContent, tags:showNoteTags})),500),[dispatch])
+
     useEffect(()=>{
         if(update){
-            setTimeout(()=>{
-                dispatch(updateNoteAction({id:updateId, heading:noteHeading, content:noteContent, tags:showNoteTags}))
-            },1000)
+            delayedQuery(updateId, noteHeading, noteContent, showNoteTags)
         }
-    },[updateId, noteHeading, dispatch, update, noteContent, showNoteTags])
+    },[updateId, noteHeading, dispatch, update, noteContent, showNoteTags, delayedQuery])
 
     const deleteTagHandler = (tag) => {
         setShowNoteTags(showNoteTags.filter(eachTag => eachTag!==tag))

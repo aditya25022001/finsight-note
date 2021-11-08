@@ -1,22 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Badge, Form, Navbar } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { showNotesAction } from '../reducers/notes/showNoteSlice'
+import { Tooltip } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
-import { Tooltip } from '@material-ui/core';
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
 
-export const SidePanel = () => {
+export const SidePanel = ({ history }) => {
+    const dispatch = useDispatch()
+    const userShowNotes = useSelector(state => state.userShowNotes)
+    const { notes } = userShowNotes
+    const userLogin = useSelector(state => state.userLogin)
+    const { userInfo } = userLogin
     const [showNoteTags] = useState(['react', 'gatsby', 'intern'])
     const deleteTagHandler = () => {}
+    useEffect(()=>{
+        if(!userInfo){
+            history.push('/')
+        }
+        else{
+            dispatch(showNotesAction())
+        }
+    },[dispatch, userInfo, history])
     return (
         <div style={{ width:"33%", display: "flex", float:'right', height:'100vh', flexDirection:'column', position:'fixed', right:0, overflowY:'scroll' }} className='border-left'>
             <Navbar fixed="top" className='d-flex w-100 searchBarSidePanel' style={{ alignItems:'center', height:'max-content', backgroundColor:'green' }} >
                 <div style={{ flex:0.9 }} className='ml-2'>
-                    <Form.Control style={{ boxShadow:'none' }} placeholder="Search all notes" class='w-100' name="elective" list="elective"/>
-                    <datalist id="elective">
-                        {showNoteTags.map((each,index) => (
-                            <option value={each} key={index}>{each}</option>
+                    <Form.Control style={{ boxShadow:'none' }} placeholder="Search all notes" class='w-100' name="note" list="notes"/>
+                    <datalist id="notes">
+                        {notes && notes.map((each,index) => (
+                            <option value={each.noteHeading} key={index}>{each.noteHeading}</option>
                         ))}
                     </datalist>
                 </div>
