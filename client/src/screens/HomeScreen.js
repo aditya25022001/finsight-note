@@ -218,7 +218,7 @@ export const HomeScreen = ({ history }) => {
                     ? <Message message={errorShow} variant="danger" />
                     : notes && notes.length>0
                     ?
-                    <div style={{width:'100%', paddingTop:'0.05rem' }} className='tableAllNotes rounded-0'>
+                    <div style={{width:'100%', paddingTop:'0.06rem' }} className='tableAllNotes rounded-0'>
                         <div className='border-0 notes'>
                             {notes && notes.map((note,index) => (
                                 <>
