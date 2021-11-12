@@ -49,6 +49,9 @@ input:disabled::placeholder{
   background-color: #f6f6f6 !important;
   color: black !important;
 }
+.sidebar{
+  height:100vh !important;
+}
 li{
   line-height: 23px !important;
   letter-spacing: 1.5px !important;
@@ -64,6 +67,7 @@ li{
 }
 .newHome{
   display: flex !important;
+  height: 100vh !important;
 }
 .tableAllNotes{
   border: none !important;
@@ -96,7 +100,7 @@ li{
 }
 .newHomeWrapper{
   display: flex;
-  overflow-y:hidden !important;
+  overflow-y:scroll !important;
   height:100vh !important;
   width:100% !important;
 }
@@ -201,7 +205,7 @@ li{
       left:3.2rem;
   }
   .rightPanel{
-      border-top:1px solid rgb(182, 182, 182);
+      /* border-top:1px solid rgb(182, 182, 182); */
       margin-top:5rem;
       padding-bottom:1rem;
   }

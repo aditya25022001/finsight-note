@@ -185,7 +185,7 @@ export const HomeScreen = ({ history }) => {
 
     return (
         <div className='newHome'>
-            <div style={{ backgroundColor:'black', width:'max-content', color:'white', height:'100vh !important', alignItems:'center', display:'flex', flexDirection:'column', padding:'0.3rem 0.5rem' }}>
+            <div className='sidebar' style={{ backgroundColor:'black', width:'max-content', color:'white', height:'100vh !important', alignItems:'center', display:'flex', flexDirection:'column', padding:'0.3rem 0.5rem' }}>
                 <Link to='/' style={{ color:'white', textDecoration:'none' }}>
                     <div style={{ cursor:'pointer' }} className='my-2 h4'>Nt</div>
                 </Link>
