@@ -33,7 +33,7 @@ const addNote = asyncHandler(async(req, res) => {
 
 const getNotes = asyncHandler(async(req, res) => {
     const userId = req.user._id
-    const notes = await Note.find({ user:userId })
+    const notes = await Note.find({ user:userId }).sort({ 'updatedAt':-1 })
     if(notes.length>0){
         res.status(200).json({
             message:"Found",

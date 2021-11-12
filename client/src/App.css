@@ -1,12 +1,17 @@
-*::-webkit-scrollbar{
-  display:none !important;
+@font-face {
+  font-family: myFirstFont;
+  src: url('./SourceSansPro-Regular.ttf');
 }
 *{
   margin: 0 !important;
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; 
+  font-family: myFirstFont;
 }
 *::placeholder{
   color: rgb(78, 78, 78) !important;
+}
+*::selection{
+  background-color:black;
+  color: white;
 }
 input{
   color: black !important;
@@ -18,15 +23,17 @@ input:disabled {
 input:disabled::placeholder{
   color: gray !important;
 }
-.note:hover{
-  background-color: #007bff !important;
-  color:white !important;
+.note{
+  padding: 8px 8px !important;
+  background-color:white;
+  letter-spacing: 0.8px;
 }
-.note:hover>.updatedTr{
-  color:white !important;
+.note:hover{
+  background-color:  #ececec !important;
+  color:black !important;
 }
 .updatedTr{
-  color: gray;
+  color: #808080;
 }
 .even{
   background-color:rgb(248, 248, 248);
@@ -34,7 +41,23 @@ input:disabled::placeholder{
 .ql-toolbar.ql-snow,.ql-editor.ql-blank,.ql-container.ql-snow { 
   border: none !important;
   font-size:15px !important;
-
+}
+.ql-formats{
+  margin:auto 8px !important;
+}
+.ql-syntax{
+  background-color: #f6f6f6 !important;
+  color: black !important;
+}
+li{
+  line-height: 23px !important;
+  letter-spacing: 1.5px !important;
+  font-size: 18px !important;
+}
+.ql-editor>p  {
+  line-height: 23px !important;
+  letter-spacing: 0.8px !important;
+  font-size: 16px !important;
 }
 .ql-toolbar.ql-snow{
   border-bottom:1px solid rgb(235, 235, 235) !important;
@@ -78,12 +101,12 @@ input:disabled::placeholder{
   width:100% !important;
 }
 .leftPanel{
-  flex:0.4 !important;
-  overflow-y: scroll !important;
+  flex:0.26 !important;
+  /* overflow-y: scroll; */
 }
 .rightPanel{
   overflow-y: scroll !important;
-  flex:0.6 !important;
+  flex:0.74 !important;
 }
 .tagsDivOne{
   flex:0.7;
@@ -91,15 +114,15 @@ input:disabled::placeholder{
   justify-content:flex-start;
 }
 .tagsDivOne>span, .badge, .bg-primary{
-  background-color:#8fd8ff !important;
+  background-color:black !important;
 }
 .buttonNote{
   width:99.5%;
 }
 .badge, .bg-primary, .tagsDivOne>span{
   border-radius: 2px !important;
-  color: #05c5ff !important;
-  background-color: #c5ebff !important;
+  color: white !important;
+  background-color: black !important;
   font-weight: 650;
 }
 .tagsDivTwo{
@@ -112,6 +135,36 @@ input:disabled::placeholder{
 }
 .disabledform{
   color: gray !important;
+}
+.dropdown-toggle, .btn-secondary, .btn-secondary:hover{
+  box-shadow: none !important;
+  border: 0px !important;
+  width: 100% !important;
+  background-color:black;
+  color: white;
+  text-align: left !important;
+}
+.dropdown-menu{
+  width: 100%;
+}
+.dropdown-item{
+  margin: auto 2px;
+}
+.dropdown-item:hover{
+  background-color:black !important;
+  color: white !important;
+}
+*::-webkit-scrollbar {
+  width: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #d4dce5;
 }
 @media screen and (max-width:600px){
   .formComponent, .alertMessage, .allNotes{

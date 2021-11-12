@@ -20,8 +20,8 @@ import CreateIcon from '@material-ui/icons/Create';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
-import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
+import AddIcon from '@material-ui/icons/Add';
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
 
@@ -44,7 +44,7 @@ export const HomeScreen = ({ history }) => {
     const { userInfo } = userLogin
     
     const userShowNotes = useSelector(state => state.userShowNotes)
-    const { error:errorShow, notes } = userShowNotes
+    const { loading:loadingShow, error:errorShow, notes } = userShowNotes
     
     const userAddNote = useSelector(state => state.userAddNote)
     const { loading, error, success, note } = userAddNote
@@ -148,7 +148,7 @@ export const HomeScreen = ({ history }) => {
         }
     },[success,note,getDate])
 
-    const delayedQuery = useCallback(() => debounce((updateId, noteHeading, noteContent, showNoteTags) => dispatch(updateNoteAction({id:updateId, heading:noteHeading, content:noteContent, tags:showNoteTags})),500),[dispatch])
+    const delayedQuery = useCallback(debounce((updateId, noteHeading, noteContent, showNoteTags) => dispatch(updateNoteAction({id:updateId, heading:noteHeading, content:noteContent, tags:showNoteTags})),500),[])
 
     useEffect(()=>{
         if(update){
@@ -169,7 +169,8 @@ export const HomeScreen = ({ history }) => {
             ['bold', 'italic', 'underline'],
             [{ list: 'ordered' }, { list: 'bullet' }],
             ['image', 'code-block'],
-            ['link']
+            ['link'],
+             [{'color': ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466", 'custom-color']}]
           ],
           handlers: {
             image: imageHandler
@@ -188,9 +189,7 @@ export const HomeScreen = ({ history }) => {
                 <Link to='/' style={{ color:'white', textDecoration:'none' }}>
                     <div style={{ cursor:'pointer' }} className='my-2 h4'>Nt</div>
                 </Link>
-                <Tooltip title="Add new note" placement="right">
-                    <div style={{ cursor:'pointer' }} className='my-2' onClick={e => newNoteHandler(e)} ><CreateIcon /></div>
-                </Tooltip>
+                <div style={{ cursor:'pointer' }} className='my-2'><CreateIcon /></div>
                 <div style={{ cursor:'pointer' }} className='my-2'><SearchIcon /></div>
                 <div style={{ cursor:'pointer' }} className='my-2'><SettingsIcon /></div>
                 {userInfo && 
@@ -209,33 +208,29 @@ export const HomeScreen = ({ history }) => {
             <div className='newHomeWrapper'>
                 <div className='leftPanel' style={{ borderRight:'1px solid rgb(235, 235, 235)' }}>
                     <Navbar fixed="top" className='d-flex w-100 searchBar' style={{ alignItems:'center' }} >
-                        <div style={{ flex:0.2, fontWeight:500, fontSize:'1.2rem', cursor:'pointer' }} className='text-center'>
-                            All Notes
-                        </div>
-                        <div style={{ flex:0.7 }}>
-                            <Form.Control value={search} onChange={e => setSearch(e.target.value)} style={{ width:'100%', boxShadow:'none', padding:'0 10px 2px 10px', height:'2.3rem' }} type="text" placeholder="Search all notes"/>
-                        </div>
-                        <div style={{ flex:0.1, textAlign:'center', cursor:'pointer' }}>
-                            <EditIcon/>
+                        <div style={{ flex:1, padding:'4px 16px' }}>
+                            <Form.Control value={search} onChange={e => setSearch(e.target.value)} style={{ width:'100%', boxShadow:'none', padding:'0 10px 2px 10px', height:'2.3rem', letterSpacing:'0.8px' }} type="text" placeholder="Search all notes"/>
                         </div>
                     </Navbar>
-                    {loadingDelete
+                    {loadingDelete || loadingShow
                     ? <Loader />
                     : errorShow 
                     ? <Message message={errorShow} variant="danger" />
                     : notes && notes.length>0
                     ?
-                    <div style={{width:'100%', paddingTop:'0.5rem' }} className='tableAllNotes rounded-0'>
-                        <div style={{ display:'flex', justifyContent:'space-between', paddingBottom:'0.5rem' }}>
-                            <div className='pl-3'>TITLE</div>
-                            <div className='pr-3' style={{ textAlign:'right' }}>UPDATED</div>
-                        </div>
-                        <div className='border-0'>
+                    <div style={{width:'100%', paddingTop:'0.05rem' }} className='tableAllNotes rounded-0'>
+                        <div className='border-0 notes'>
                             {notes && notes.map((note,index) => (
-                                <div className={index%2===0 ? 'note border-0 p-0 d-flex even' : 'note odd border-0 p-0 d-flex'} key={note._id} onClick={e => setUpdateHandler(note._id, note.noteHeading, note.noteContent, note.noteTags, note.updatedAt.slice(0,10))} style={{ cursor:'pointer', alignItems:'center', justifyContent:'space-between' }}>
-                                    <div className='pl-3 py-1' style={{ fontWeight:500 }}>{note.noteHeading}</div>
-                                    <div className='pr-3 py-1 updatedTr' style={{ textAlign:'right', fontWeight:500, fontSize:13 }}>{getDate(note.updatedAt.slice(0,10))}</div>
+                                <>
+                                <div className='note border-0 p-0' key={index} onClick={e => setUpdateHandler(note._id, note.noteHeading, note.noteContent, note.noteTags, note.updatedAt.slice(0,10))} style={{ cursor:'pointer', borderRadius:'0px' }}>
+                                    <div className='d-flex pb-1' style={{ alignItems:'center', justifyContent:'space-between' }}>
+                                        <div className='pl-3' style={{ fontWeight:500, fontSize:18, letterSpacing:'1.2px' }}>{note.noteHeading}</div>
+                                        <div className='pl-3 updatedTr' style={{ fontWeight:500, fontSize:13 }}>{getDate(note.updatedAt.slice(0,10))}</div>
+                                    </div>
+                                    <div className='pl-3 pb-1' style={{ fontWeight:500, fontSize:15, color:'#6c6c6c' }}>{note.noteContent.replace(/<\/?[^>]+(>|$)/g, "").split(' ').slice(0,10).join(' ')}...</div>
                                 </div>
+                                <hr/>
+                                </>
                             ))}
                         </div>
                     </div>
@@ -252,8 +247,9 @@ export const HomeScreen = ({ history }) => {
                     {successDelete && <Message message="Deleted successfully" variant="success" />}
                     {!userInfo 
                     ?<Message variant='danger' message="Please login to add note" /> 
-                    :<Form className={addNote || update ? 'mx-auto' : 'mx-auto disabledform'}>
-                        <Form.Label style={{ padding:'0.25rem 0.3rem 0.25rem 0.7rem', width:'100%' }} className='headingRight'>
+                    : addNote || update 
+                    ? <Form>
+                        <Form.Label style={{ padding:'0.5rem 0.3rem 0.5rem 0.7rem', width:'100%' }} className='headingRight'>
                             <div className='headingRightOne'>
                                 <div style={{ fontWeight:'500', fontSize:'1.29rem' }}>
                                     {update && noteHeading ? noteHeading : "Add Note"}
@@ -280,7 +276,7 @@ export const HomeScreen = ({ history }) => {
                                         <Badge className='p-1 mx-1' key={index} style={{ fontSize:'0.85rem', fontWeight:'500', textTransform:'uppercase', alignItems:'center', display:'flex' }}>
                                             {tag}
                                             <span className='ml-1'>
-                                                <CloseIcon style={{ color:'#007bff', fontSize:'0.8rem', cursor:'pointer', backgroundColor:'#c5ebff', borderRadius:'50%' }} onClick={e => deleteTagHandler(tag)} />
+                                                <CloseIcon style={{ color:'white', fontSize:'0.8rem', cursor:'pointer', borderRadius:'50%' }} onClick={e => deleteTagHandler(tag)} />
                                             </span>
                                         </Badge>
                                     </div>
@@ -294,7 +290,13 @@ export const HomeScreen = ({ history }) => {
                         </Form.Group>
                         <input type='file' accept='image/*' id='inputimage' style={{ display:'none' }} onChange={uploadHandler} />
                         <ReactQuill modules={modules} readOnly={!addNote && !update} value={noteContent} id="print" onChange={e => setNoteContent(e)}></ReactQuill>
-                    </Form>}
+                    </Form>
+                    :<Tooltip placement="top" title="Add New Note">
+                        <div style={{ borderRadius:'50%', position:'fixed', bottom:'2rem', right:"2rem", backgroundColor:'#ececec', border:'1px solid rgb(210,210,210)', padding:'0.4rem', cursor:'pointer', boxShadow:'1px 1px 3px gray' }}>
+                            <AddIcon style={{ fontSize:"2rem" }} onClick={e => newNoteHandler(e)} />
+                        </div>
+                    </Tooltip> 
+                    }
                 </div>   
             </div>
         </div>
