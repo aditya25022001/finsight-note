@@ -13,6 +13,20 @@
   background-color:black;
   color: white;
 }
+*::-webkit-scrollbar {
+  width: 4px !important; 
+}
+*::-webkit-scrollbar-track {
+  background-color: transparent !important;
+}
+*::-webkit-scrollbar-thumb {
+  border-radius: 10px !important;
+  background-color: #f0f0f0 !important;
+}
+*::-webkit-scrollbar-thumb:hover {
+  border-radius: 10px !important;
+  background-color: #d4dce5 !important;
+}
 input{
   color: black !important;
 }
@@ -24,7 +38,7 @@ input:disabled::placeholder{
   color: gray !important;
 }
 .note{
-  padding: 8px 8px !important;
+  padding: 8px 26px 8px 0px !important;
   background-color:white;
   letter-spacing: 0.8px;
 }
@@ -50,7 +64,9 @@ input:disabled::placeholder{
   color: black !important;
 }
 .sidebar{
-  height:100vh !important;
+  z-index: 200 !important;
+  position: fixed;
+  height: 100vh !important;
 }
 li{
   line-height: 23px !important;
@@ -67,10 +83,12 @@ li{
 }
 .newHome{
   display: flex !important;
-  height: 100vh !important;
+  overflow-y: hidden !important;
 }
 .tableAllNotes{
   border: none !important;
+  margin-left: 13px !important;
+  margin-right:13px !important;
 }
 .tags{
   display: flex !important;
@@ -82,7 +100,6 @@ li{
   background-color:white !important;
   padding: 0.6rem 0.1rem;
   border-bottom:1px solid rgb(235, 235, 235);
-  /* box-shadow: 0px 1px 12px rgb(226, 226, 226) !important; */
 }
 .searchBarSidePanel{
   position:sticky !important;
@@ -92,7 +109,6 @@ li{
   border-bottom:1px solid rgb(235, 235, 235);
 }
 .headingRight{
-  /* box-shadow: 0px 1px 12px rgb(226, 226, 226) !important; */
   display: flex;
   border-bottom: 1px solid rgb(235, 235, 235);
   justify-content:space-between;
@@ -100,13 +116,15 @@ li{
 }
 .newHomeWrapper{
   display: flex;
-  overflow-y:scroll !important;
+  /* overflow-y:scroll !important; */
   height:100vh !important;
   width:100% !important;
+  margin-left:2rem !important;
 }
 .leftPanel{
   flex:0.26 !important;
-  /* overflow-y: scroll; */
+  overflow-y: scroll;
+  overflow-x: hidden !important;
 }
 .rightPanel{
   overflow-y: scroll !important;
@@ -158,17 +176,29 @@ li{
   background-color:black !important;
   color: white !important;
 }
-*::-webkit-scrollbar {
-  width: 4px;
+@media screen and (max-width: 1200px) {
+  .leftPanel{
+    flex:0.3 !important;
+  }
+  .rightPanel{
+    flex:0.7 !important;
+  }
 }
-
-*::-webkit-scrollbar-track {
-  background-color: transparent;
+@media screen and (max-width: 1000px) {
+  .leftPanel{
+    flex:0.4 !important;
+  }
+  .rightPanel{
+    flex:0.6 !important;
+  }
 }
-
-*::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: #d4dce5;
+@media screen and (max-width: 800px) {
+  .leftPanel{
+    flex:0.48 !important;
+  }
+  .rightPanel{
+    flex:0.52 !important;
+  }
 }
 @media screen and (max-width:600px){
   .formComponent, .alertMessage, .allNotes{
@@ -185,6 +215,7 @@ li{
   }
   .headingRightOne{
       display:flex;
+      margin-left:17px !important;
       align-items: center;
   }
   .headingRight-date{
@@ -205,21 +236,27 @@ li{
       left:3.2rem;
   }
   .rightPanel{
-      /* border-top:1px solid rgb(182, 182, 182); */
-      margin-top:5rem;
+      /* margin-top:5rem; */
       padding-bottom:1rem;
-  }
-  .leftPanel{
-      height: 100vh !important;
+      border-top: 1px solid rgb(235,235,235) !important;
   }
   .buttonNote{
       width:95%;
   }
   .searchBar{
-      width:88%;
+      width:calc(100vw - 2.4rem) !important;
+      position:fixed !important;
+      margin-left:2.3rem !important;
   }
   .tableAllNotes{
-      width:100% !important;
       margin-bottom: 2rem !important;
+      padding-top:4rem !important;
+      margin-left: 0 !important;
+  }
+  .note{
+    padding: 8px !important;
+  }
+  .ql-editor{
+    padding-left:25px !important;
   }
 }
