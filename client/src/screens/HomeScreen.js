@@ -222,14 +222,13 @@ export const HomeScreen = ({ history }) => {
                         <div className='border-0 notes'>
                             {notes && notes.map((note,index) => (
                                 <>
-                                <div className='note border-0 p-0' key={index} onClick={e => setUpdateHandler(note._id, note.noteHeading, note.noteContent, note.noteTags, note.updatedAt.slice(0,10))} style={{ cursor:'pointer', borderRadius:'0px' }}>
+                                <div className='note p-0' key={index} onClick={e => setUpdateHandler(note._id, note.noteHeading, note.noteContent, note.noteTags, note.updatedAt.slice(0,10))} style={{ cursor:'pointer', borderRadius:'0px' }}>
                                     <div className='d-flex pb-1' style={{ alignItems:'center', justifyContent:'space-between' }}>
                                         <div className='pl-3' style={{ fontWeight:500, fontSize:18, letterSpacing:'1.2px' }}>{note.noteHeading}</div>
                                         <div className='pl-3 updatedTr' style={{ fontWeight:500, fontSize:13 }}>{getDate(note.updatedAt.slice(0,10))}</div>
                                     </div>
-                                    <div className='pl-3 pb-1' style={{ fontWeight:500, fontSize:15, color:'#6c6c6c' }}>{note.noteContent.replace(/<\/?[^>]+(>|$)/g, "").split(' ').slice(0,10).join(' ')}...</div>
+                                    <div className='pl-3 pb-1' style={{ fontWeight:500, fontSize:15, color:'#6c6c6c' }}>{note.noteContent.replace(/<\/?[^>]+(>|$)/g, "").split(' ').slice(0,7).join(' ')}...</div>
                                 </div>
-                                <hr/>
                                 </>
                             ))}
                         </div>
@@ -291,6 +290,12 @@ export const HomeScreen = ({ history }) => {
                         <input type='file' accept='image/*' id='inputimage' style={{ display:'none' }} onChange={uploadHandler} />
                         <ReactQuill modules={modules} readOnly={!addNote && !update} value={noteContent} id="print" onChange={e => setNoteContent(e)}></ReactQuill>
                     </Form>
+                    :window.innerWidth>600 
+                    ?<Tooltip placement="top" title="Add New Note">
+                        <div style={{ borderRadius:'50%', position:'fixed', bottom:'2rem', right:"2rem", backgroundColor:'#ececec', border:'1px solid rgb(210,210,210)', padding:'0.4rem', cursor:'pointer', boxShadow:'1px 1px 3px gray' }}>
+                            <AddIcon style={{ fontSize:"2rem" }} onClick={e => newNoteHandler(e)} />
+                        </div>
+                    </Tooltip> 
                     :<Tooltip placement="top" title="Add New Note">
                         <div style={{ borderRadius:'50%', position:'fixed', bottom:'2rem', right:"2rem", backgroundColor:'#ececec', border:'1px solid rgb(210,210,210)', padding:'0.4rem', cursor:'pointer', boxShadow:'1px 1px 3px gray' }}>
                             <AddIcon style={{ fontSize:"2rem" }} onClick={e => newNoteHandler(e)} />
