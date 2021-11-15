@@ -37,7 +37,7 @@ export const LoginScreen = ({ history }) => {
                     <Form.Control style={{ boxShadow:'none' }} type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" required />
                 </Form.Group>
                 <Form.Group className='m-2 mt-4'>
-                    <Button variant="primary" style={{ width:'100%' }} type="submit">Login</Button>
+                    <Button variant="dark" style={{ width:'100%' }} type="submit">Login</Button>
                 </Form.Group> 
                 <Form.Group className='mb-0 ml-2 mt-3'>
                     <Form.Label>

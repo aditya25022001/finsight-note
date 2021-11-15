@@ -1,0 +1,24 @@
+<div className='sidebar' style={{ backgroundColor:'black', width:'max-content', color:'white', height:'100vh !important', alignItems:'center', display:'flex', flexDirection:'column', padding:'0.3rem 0.5rem' }}>
+    <Link to='/' className='mt-3 mb-2' style={{ color:'white', textDecoration:'none' }}>
+        <Image src='./favicon.ico' className='rounded-circle' width={25} height={25} />
+    </Link>
+    <div style={{ cursor:'pointer' }} className='my-2'><SettingsIcon /></div>
+    {userInfo && 
+        <Tooltip title='Logout' placement="right">
+            <div style={{ cursor:'pointer' }} className='my-2' onClick={logoutHandler}>
+                <PowerSettingsNewIcon />
+            </div>
+        </Tooltip>
+    }
+    {!userInfo && 
+    <Link to="/login" style={{ color:'white' }}>
+        <div style={{ cursor:'pointer' }} className='my-2'><ExitToAppIcon/></div>
+    </Link>
+    }
+</div>
+
+.sidebar{
+  z-index: 200 !important;
+  position: fixed;
+  height: 100vh !important;
+}

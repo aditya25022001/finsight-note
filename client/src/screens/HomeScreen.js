@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
-import { Form, Navbar, Badge } from 'react-bootstrap'
+import { Form, Navbar, Badge, Image } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Loader } from '../components/Loader'
 import { Message } from '../components/Message'
@@ -11,23 +11,15 @@ import { logoutAction } from '../reducers/users/loginSlice'
 import { Link } from 'react-router-dom';
 import { debounce } from 'lodash'
 import Tooltip from '@material-ui/core/Tooltip'
-import SearchIcon from '@material-ui/icons/Search';
-import LinkIcon from '@material-ui/icons/Link';
-import GetAppIcon from '@material-ui/icons/GetApp';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PrintIcon from '@material-ui/icons/Print';
-import CreateIcon from '@material-ui/icons/Create';
-import SettingsIcon from '@material-ui/icons/Settings';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import CloseIcon from '@material-ui/icons/Close';
-import AddIcon from '@material-ui/icons/Add';
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
 
 export const HomeScreen = ({ history }) => {
 
-    const [search, setSearch] = useState("")
     const [noteHeading, setNoteHeading] = useState("")
     const [noteContent, setNoteContent] = useState("")
     const [noteTags, setNoteTags] = useState("")
@@ -57,7 +49,7 @@ export const HomeScreen = ({ history }) => {
 
     useEffect(()=>{
         if(!userInfo){
-            history.push('/')
+            history.push('/login')
         }
         else{
             dispatch(showNotesAction(userInfo._id))
@@ -118,6 +110,15 @@ export const HomeScreen = ({ history }) => {
         document.body.innerHTML = originalContents
     }
 
+    const printHandlerMobile = (content) => {
+        let originalContents = document.body.innerHTML
+        document.body.innerHTML = content
+        window.print()
+        setTimeout(() => {
+            document.body.innerHTML = originalContents
+        },3000)
+    }
+
     const deleteNoteHandler = (e, id) => {
         e.preventDefault()
         setUpdate(false)
@@ -159,9 +160,6 @@ export const HomeScreen = ({ history }) => {
     const deleteTagHandler = (tag) => {
         setShowNoteTags(showNoteTags.filter(eachTag => eachTag!==tag))
     }
-    const imageHandler = () => { 
-        document.getElementById('inputimage').click()
-    }
     const modules = useMemo(() => ({
         toolbar: {
           container: [
@@ -172,44 +170,25 @@ export const HomeScreen = ({ history }) => {
             ['link'],
              [{'color': ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466", 'custom-color']}]
           ],
-          handlers: {
-            image: imageHandler
-          }
         }
       }), [])
 
-      const uploadHandler = async (e) => {
-        e.preventDefault();
-        console.log(e.target.files[0])
-      }
-
     return (
         <div className='newHome'>
-            <div className='sidebar' style={{ backgroundColor:'black', width:'max-content', color:'white', height:'100vh !important', alignItems:'center', display:'flex', flexDirection:'column', padding:'0.3rem 0.5rem' }}>
-                <Link to='/' style={{ color:'white', textDecoration:'none' }}>
-                    <div style={{ cursor:'pointer' }} className='my-2 h4'>Nt</div>
-                </Link>
-                <div style={{ cursor:'pointer' }} className='my-2'><CreateIcon /></div>
-                <div style={{ cursor:'pointer' }} className='my-2'><SearchIcon /></div>
-                <div style={{ cursor:'pointer' }} className='my-2'><SettingsIcon /></div>
-                {userInfo && 
-                    <Tooltip title='Logout' placement="right">
-                        <div style={{ cursor:'pointer' }} className='my-2' onClick={logoutHandler}>
-                            <PowerSettingsNewIcon />
-                        </div>
-                    </Tooltip>
-                }
-                {!userInfo && 
-                <Link to="/login" style={{ color:'white' }}>
-                    <div style={{ cursor:'pointer' }} className='my-2'><ExitToAppIcon/></div>
-                </Link>
-                }
+            <div className='rounded-circle' style={{ position:'fixed', bottom:'1rem', left:'1rem', backgroundColor:'#ececec', padding:'0.4rem', border:'1px solid rgb(210,210,210)', cursor:'pointer', boxShadow:'1px 1px 3px gray', zIndex:'300' }}>
+            {userInfo && 
+                <Tooltip title='Logout' placement="top">
+                    <div style={{ cursor:'pointer' }} onClick={logoutHandler}>
+                        <PowerSettingsNewIcon style={{ fontSize:'2rem' }}  />
+                    </div>
+                </Tooltip>
+            }
             </div>
             <div className='newHomeWrapper'>
                 <div className='leftPanel' style={{ borderRight:'1px solid rgb(235, 235, 235)' }}>
                     <Navbar fixed="top" className='d-flex w-100 searchBar' style={{ alignItems:'center' }} >
                         <div style={{ flex:1, padding:'4px 16px' }}>
-                            <Form.Control value={search} onChange={e => setSearch(e.target.value)} style={{ width:'100%', boxShadow:'none', padding:'0 10px 2px 10px', height:'2.3rem', letterSpacing:'0.8px' }} type="text" placeholder="Search all notes"/>
+                            <div style={{ fontWeight:'800', fontSize:'1.3rem' }}>Welcome back {userInfo && userInfo.name.split(' ')[0]}!</div>
                         </div>
                     </Navbar>
                     {loadingDelete || loadingShow
@@ -221,15 +200,37 @@ export const HomeScreen = ({ history }) => {
                     <div style={{width:'100%', paddingTop:'0.06rem' }} className='tableAllNotes rounded-0'>
                         <div className='border-0 notes'>
                             {notes && notes.map((note,index) => (
-                                <>
-                                <div className='note p-0' key={index} onClick={e => setUpdateHandler(note._id, note.noteHeading, note.noteContent, note.noteTags, note.updatedAt.slice(0,10))} style={{ cursor:'pointer', borderRadius:'0px' }}>
+                                <div key={index}>
+                                {window.innerWidth>=600
+                                ?
+                                <div key={index}><div className='note p-0' key={index} onClick={e => setUpdateHandler(note._id, note.noteHeading, note.noteContent, note.noteTags, note.updatedAt.slice(0,10))} style={{ cursor:'pointer', borderRadius:'6px' }}>
                                     <div className='d-flex pb-1' style={{ alignItems:'center', justifyContent:'space-between' }}>
                                         <div className='pl-3' style={{ fontWeight:500, fontSize:18, letterSpacing:'1.2px' }}>{note.noteHeading}</div>
                                         <div className='pl-3 updatedTr' style={{ fontWeight:500, fontSize:13 }}>{getDate(note.updatedAt.slice(0,10))}</div>
                                     </div>
-                                    <div className='pl-3 pb-1' style={{ fontWeight:500, fontSize:15, color:'#6c6c6c' }}>{note.noteContent.replace(/<\/?[^>]+(>|$)/g, "").split(' ').slice(0,7).join(' ')}...</div>
+                                    <div className='pl-3 pb-1 noteContent' style={{ fontWeight:500, fontSize:15 }}>{note.noteContent.replace(/<\/?[^>]+(>|$)/g, "").split(' ').slice(0,7).join(' ')}...</div>
                                 </div>
+                                <div className='border-bottom'></div></div>
+                                :<>
+                                    <div className='note p-0' key={index} style={{ cursor:'pointer', borderRadius:'6px', color:'black' }}>
+                                        <Link to={`/note`} className='notelink' style={{ color:'black' }}>
+                                            <div className='d-flex pb-1' style={{ alignItems:'center', justifyContent:'space-between' }}>
+                                                <div className='pl-3' style={{ fontWeight:500, fontSize:18, letterSpacing:'1.2px' }}>{note.noteHeading}</div>
+                                                <div className='pl-3 updatedTr' style={{ fontWeight:500, fontSize:13 }}>{getDate(note.updatedAt.slice(0,10))}</div>
+                                            </div>
+                                        </Link>
+                                        <div className='d-flex' style={{ alignItems:'center', justifyContent:'space-between' }}>
+                                            <div className='pl-3 pb-1 noteContent' style={{ fontWeight:500, fontSize:15 }}>{note.noteContent.replace(/<\/?[^>]+(>|$)/g, "").split(' ').slice(0,5).join(' ')}...</div>
+                                            <div className='updatedTr'>
+                                                <PrintIcon onClick={e => printHandlerMobile(note.noteContent)} className='mx-2' style={{ fontSize:'1.3rem', cursor:'pointer' }} />
+                                                <DeleteIcon onClick={e => deleteNoteHandler(e, note._id)} />
+                                            </div>
+                                        </div>
+                                    </div>  
+                                    <div className='border-bottom'></div>
                                 </>
+                                }
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -259,10 +260,8 @@ export const HomeScreen = ({ history }) => {
                             </div>
                             {update && 
                             <div>
-                                {window.innerWidth>600 && <LinkIcon className='mx-2' style={{ fontSize:'1.5rem', cursor:'pointer' }} />}
-                                {window.innerWidth>600 && <GetAppIcon className='mx-2' style={{ fontSize:'1.3rem', cursor:'pointer' }} />}
                                 <DeleteIcon className='mx-2' onClick={e => deleteNoteHandler(e, updateId)} style={{ fontSize:'1.3rem', cursor:'pointer' }} />
-                                {window.innerWidth>600 && <PrintIcon onClick={e => printHandler("print")} className='mx-2' style={{ fontSize:'1.3rem', cursor:'pointer' }} />}
+                                <PrintIcon onClick={e => printHandler("print")} className='mx-2' style={{ fontSize:'1.3rem', cursor:'pointer' }} />
                             </div>}
                         </Form.Label>
                         <Form.Group className='py-2 pl-3' style={{ borderBottom:'1px solid rgb(235, 235, 235)' }}>
@@ -271,8 +270,8 @@ export const HomeScreen = ({ history }) => {
                         <Form.Group className='my-0 pl-3 tags' style={{ borderBottom:'1px solid rgb(235, 235, 235)' }}>
                             <div className='tagsDivOne'>
                                 {showNoteTags.map((tag,index) => (
-                                    <div>
-                                        <Badge className='p-1 mx-1' key={index} style={{ fontSize:'0.85rem', fontWeight:'500', textTransform:'uppercase', alignItems:'center', display:'flex' }}>
+                                    <div key={index}>
+                                        <Badge className='p-1 mx-1' style={{ fontSize:'0.85rem', fontWeight:'500', textTransform:'uppercase', alignItems:'center', display:'flex' }}>
                                             {tag}
                                             <span className='ml-1'>
                                                 <CloseIcon style={{ color:'white', fontSize:'0.8rem', cursor:'pointer', borderRadius:'50%' }} onClick={e => deleteTagHandler(tag)} />
@@ -287,20 +286,20 @@ export const HomeScreen = ({ history }) => {
                                 </Tooltip>
                             </div>
                         </Form.Group>
-                        <input type='file' accept='image/*' id='inputimage' style={{ display:'none' }} onChange={uploadHandler} />
                         <ReactQuill modules={modules} readOnly={!addNote && !update} value={noteContent} id="print" onChange={e => setNoteContent(e)}></ReactQuill>
                     </Form>
-                    :window.innerWidth>600 
-                    ?<Tooltip placement="top" title="Add New Note">
-                        <div style={{ borderRadius:'50%', position:'fixed', bottom:'2rem', right:"2rem", backgroundColor:'#ececec', border:'1px solid rgb(210,210,210)', padding:'0.4rem', cursor:'pointer', boxShadow:'1px 1px 3px gray' }}>
-                            <AddIcon style={{ fontSize:"2rem" }} onClick={e => newNoteHandler(e)} />
-                        </div>
-                    </Tooltip> 
-                    :<Tooltip placement="top" title="Add New Note">
-                        <div style={{ borderRadius:'50%', position:'fixed', bottom:'2rem', right:"2rem", backgroundColor:'#ececec', border:'1px solid rgb(210,210,210)', padding:'0.4rem', cursor:'pointer', boxShadow:'1px 1px 3px gray' }}>
-                            <AddIcon style={{ fontSize:"2rem" }} onClick={e => newNoteHandler(e)} />
-                        </div>
-                    </Tooltip> 
+                    :window.innerWidth>=600 
+                    ?<div className='m-auto p-3' style={{ backgroundColor:'whitesmoke', height:'100%', width:'100%' }}>
+                        <h3 style={{ color:'#808080' }}>Click on icon to add note</h3>
+                        <Tooltip placement="top" title="Add New Note">
+                            <div style={{ borderRadius:'50%', position:'fixed', bottom:'1rem', right:"1rem", backgroundColor:'#ececec', border:'1px solid rgb(210,210,210)', padding:'0.4rem', cursor:'pointer', boxShadow:'1px 1px 3px gray' }}>
+                                <Image src='./create.ico' width={31} height={31} onClick={e => newNoteHandler(e)} />
+                            </div>
+                        </Tooltip> 
+                    </div>
+                    :<Link to="/note" style={{ borderRadius:'50%', position:'fixed', bottom:'1rem', right:"1rem", backgroundColor:'#ececec', border:'1px solid rgb(210,210,210)', padding:'0.4rem', cursor:'pointer', boxShadow:'1px 1px 3px gray', color:'black' }}>
+                        <Image src='./create.ico' width={31} height={31} />
+                    </Link> 
                     }
                 </div>   
             </div>
