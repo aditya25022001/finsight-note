@@ -97,4 +97,20 @@ const deleteNote = asyncHandler(async(req, res) => {
     }
 })
 
-export { addNote, getNotes, updateNote, deleteNote }
+const getNoteById = asyncHandler(async(req, res) => {
+    const { id } = req.params
+    const note = await Note.findById(id)
+    if(note){
+        res.status(200).json({
+            message:"Note found",
+            note:note
+        })
+    }
+    else{
+        res.status(404).json({
+            message:"Note not found"
+        })
+    }
+})
+
+export { addNote, getNotes, updateNote, deleteNote, getNoteById }
