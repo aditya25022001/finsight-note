@@ -1,0 +1,17 @@
+<div style={{ flex:0.9 }} className='ml-2'>
+    <Dropdown>
+        <Dropdown.Toggle style={{ boxShadow:'none !important' }} variant="secondary" id="dropdown-basic">
+            {noteHeading || "Select Note"}
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+            {notes && notes.map((each,index) => (
+                <Dropdown.Item onClick={e => setUpdateHandler(each._id, each.noteHeading, each.noteContent, each.noteTags)}>
+                    <option value={each.noteHeading} key={index}>{each.noteHeading}</option>
+                </Dropdown.Item>
+            ))}
+        </Dropdown.Menu>
+    </Dropdown>
+</div>
+<div style={{ flex:0.1, textAlign:'center', cursor:'pointer' }}>
+    <EditIcon/>
+</div>

@@ -4,11 +4,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { showNotesAction } from '../reducers/notes/showNoteSlice'
 import { Tooltip } from '@material-ui/core';
 import { updateNoteAction } from '../reducers/notes/updateNoteSlice';
-import EditIcon from '@material-ui/icons/Edit';
+import { debounce } from 'lodash';
 import CloseIcon from '@material-ui/icons/Close';
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
-import { debounce } from 'lodash';
 
 export const SidePanel = ({ history }) => {
     const dispatch = useDispatch()
@@ -53,28 +52,17 @@ export const SidePanel = ({ history }) => {
             delayedQuery(updateId, noteHeading, noteContent, showNoteTags)
         }
     },[updateId, noteHeading, dispatch, update, noteContent, showNoteTags, delayedQuery])
-    const imageHandler = () => { 
-        document.getElementById('inputimage').click()
-    }
     const modules = useMemo(() => ({
         toolbar: {
           container: [
-            [{ header: [1, 2, 3, 4, 5, 6] }],
-            ['bold', 'italic', 'underline'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['image', 'code-block'],
-            ['link'],
-             [{'color': ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466", 'custom-color']}]
+            [{ header: [1, 2, 3, 4, 5, 6] },'bold', 'italic', 'underline', { list: 'ordered' }, { list: 'bullet' },'code-block','link',{'color': ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466", 'custom-color']}],
           ],
-          handlers: {
-            image: imageHandler
-          }
         }
       }), [])
     return (
         <div style={{ width:"33%", display: "flex", float:'right', height:'100vh', flexDirection:'column', position:'fixed', right:0, overflowY:'scroll' }} className='border-left'>
             <Navbar fixed="top" className='d-flex w-100 searchBarSidePanel' style={{ alignItems:'center', height:'max-content', backgroundColor:'green' }} >
-                <div style={{ flex:0.9 }} className='ml-2'>
+                <div style={{ flex:1 }} className='ml-2'>
                     <Dropdown>
                         <Dropdown.Toggle style={{ boxShadow:'none !important' }} variant="secondary" id="dropdown-basic">
                             {noteHeading || "Select Note"}
@@ -87,9 +75,6 @@ export const SidePanel = ({ history }) => {
                             ))}
                         </Dropdown.Menu>
                     </Dropdown>
-                </div>
-                <div style={{ flex:0.1, textAlign:'center', cursor:'pointer' }}>
-                    <EditIcon/>
                 </div>
             </Navbar>
             <div className='px-0'>

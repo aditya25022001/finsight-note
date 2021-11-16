@@ -10,7 +10,7 @@
   color: rgb(78, 78, 78) !important;
 }
 *::selection{
-  background-color:black;
+  background-color:#858585;
   color: white;
 }
 input{
@@ -42,12 +42,61 @@ input:disabled::placeholder{
   border: none !important;
   font-size:15px !important;
 }
+.ql-header, .ql-picker{
+  display: flex;
+  align-items: center;
+}
+.ql-header>span>svg{
+  margin-top:-0.5rem !important;
+}
 .ql-formats{
   margin:auto 8px !important;
+}
+.ql-picker-label{
+  font-size: 0.9rem;
+  letter-spacing:1.2px !important;
+}
+.ql-formats>button{
+  margin:auto 0.2rem !important;
+}
+.ql-formats>button:hover{
+  color: green !important;
 }
 .ql-syntax{
   background-color: #f6f6f6 !important;
   color: black !important;
+  border: 1px solid lightgray;
+}
+
+/* .ql-toolbar .ql-stroke {
+  fill: none !important;
+  stroke: black !important;
+}
+.ql-toolbar .ql-fill {
+  fill: black !important;
+  stroke: none !important;
+}
+.ql-toolbar .ql-stroke:hover{
+  fill: green !important;
+  stroke: none !important;
+}
+.ql-toolbar .ql-fill:hover{
+  fill: green !important;
+  stroke: none !important;
+}
+.ql-toolbar .ql-picker {
+  color: black !important;
+} */
+
+.ql-picker-options{
+  box-shadow: 0 0 0 2px rgba(150, 159, 168, 0.2) !important;
+  border: none !important;
+}
+.ql-picker-item{
+  letter-spacing:1.1px !important;
+}
+.ql-picker-item:hover, .ql-selected:hover{
+  color: #8a8a8a !important;
 }
 .sidebar{
   height:100vh !important;
@@ -118,7 +167,7 @@ li{
   justify-content:flex-start;
 }
 .tagsDivOne>span, .badge, .bg-primary{
-  background-color:black !important;
+  background-color:gray !important;
 }
 .buttonNote{
   width:99.5%;
@@ -126,7 +175,7 @@ li{
 .badge, .bg-primary, .tagsDivOne>span{
   border-radius: 2px !important;
   color: white !important;
-  background-color: black !important;
+  background-color: gray !important;
   font-weight: 650;
 }
 .tagsDivTwo{
@@ -142,21 +191,24 @@ li{
 }
 .dropdown-toggle, .btn-secondary, .btn-secondary:hover{
   box-shadow: none !important;
-  border: 0px !important;
   width: 100% !important;
-  background-color:black;
-  color: white;
+  /* border:1px solid #b1b1b1 !important;
+  background-color:white;
+  color: black; */
   text-align: left !important;
 }
 .dropdown-menu{
   width: 100%;
+  padding: 0;
 }
 .dropdown-item{
   margin: auto 2px;
+  padding: 50px auto !important;
+  letter-spacing: 1.1px;
 }
 .dropdown-item:hover{
-  background-color:black !important;
-  color: white !important;
+  background-color:#ececec !important;
+  color: black !important;
 }
 *::-webkit-scrollbar {
   width: 4px;
@@ -169,6 +221,14 @@ li{
 *::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background-color: #d4dce5;
+}
+.noNotes{
+  padding-top:2rem;
+  text-align: center;
+  letter-spacing:1.1px;
+}
+.leftpanelsearch{
+  border:1px solid #e2e2e2 !important; 
 }
 @media screen and (max-width:600px){
   .formComponent, .alertMessage, .allNotes{

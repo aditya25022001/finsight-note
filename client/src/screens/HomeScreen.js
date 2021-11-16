@@ -159,22 +159,11 @@ export const HomeScreen = ({ history }) => {
     const deleteTagHandler = (tag) => {
         setShowNoteTags(showNoteTags.filter(eachTag => eachTag!==tag))
     }
-    const imageHandler = () => { 
-        document.getElementById('inputimage').click()
-    }
     const modules = useMemo(() => ({
         toolbar: {
           container: [
-            [{ header: [1, 2, 3, 4, 5, 6] }],
-            ['bold', 'italic', 'underline'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['image', 'code-block'],
-            ['link'],
-             [{'color': ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466", 'custom-color']}]
+            [{ header: [1, 2, 3, 4, 5, 6] },'bold', 'italic', 'underline', { list: 'ordered' }, { list: 'bullet' },'code-block','link',{'color': ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466", 'custom-color']}],
           ],
-          handlers: {
-            image: imageHandler
-          }
         }
       }), [])
 
@@ -207,9 +196,10 @@ export const HomeScreen = ({ history }) => {
             </div>
             <div className='newHomeWrapper'>
                 <div className='leftPanel' style={{ borderRight:'1px solid rgb(235, 235, 235)' }}>
-                    <Navbar fixed="top" className='d-flex w-100 searchBar' style={{ alignItems:'center' }} >
-                        <div style={{ flex:1, padding:'4px 16px' }}>
-                            <Form.Control value={search} onChange={e => setSearch(e.target.value)} style={{ width:'100%', boxShadow:'none', padding:'0 10px 2px 10px', height:'2.3rem', letterSpacing:'0.8px' }} type="text" placeholder="Search all notes"/>
+                    <Navbar fixed="top" className='d-flex w-100 searchBar' style={{ flexDirection:'column' }} >
+                        <div className='h5' style={{ textAlign:'left', width:'90%', padding:'0px 4px 4px 4px', letterSpacing:'0.8px' }}>Anotated PDFs</div>
+                        <div style={{ flex:1, padding:'4px 1px', width:'90%' }}>
+                            <Form.Control className="leftpanelsearch" value={search} onChange={e => setSearch(e.target.value)} style={{ width:'100%', boxShadow:'none', padding:'0 10px 2px 10px', height:'2.3rem', letterSpacing:'0.8px' }} type="text" placeholder="Filter by company"/>
                         </div>
                     </Navbar>
                     {loadingDelete || loadingShow
@@ -238,7 +228,43 @@ export const HomeScreen = ({ history }) => {
                     !userInfo 
                     ?<Message variant='danger' message="Please login to view you notes" /> 
                     :
-                    <div>No notes until now</div>
+                    <div className='noNotes'>Your notes will appear here.</div>
+                    }
+                </div>
+                <div className='leftPanel' style={{ borderRight:'1px solid rgb(235, 235, 235)' }}>
+                    <Navbar fixed="top" className='d-flex w-100 searchBar' style={{ alignItems:'center', flexDirection:'column' }} >
+                    <div className='h5' style={{ textAlign:'left', width:'90%', padding:'0px 4px 4px 4px', letterSpacing:'0.8px' }}>Notes</div>
+                        <div style={{ flex:1, padding:'4px 1px', width:'90%' }}>
+                            <Form.Control value={search} className='leftpanelsearch' onChange={e => setSearch(e.target.value)} style={{ width:'100%', boxShadow:'none', padding:'0 10px 2px 10px', height:'2.3rem', letterSpacing:'0.8px' }} type="text" placeholder="Search all notes"/>
+                        </div>
+                    </Navbar>
+                    {loadingDelete || loadingShow
+                    ? <Loader />
+                    : errorShow 
+                    ? <Message message={errorShow} variant="danger" />
+                    : notes && notes.length>0
+                    ?
+                    <div style={{width:'100%', paddingTop:'0.05rem' }} className='tableAllNotes rounded-0'>
+                        <div className='border-0 notes'>
+                            {notes && notes.map((note,index) => (
+                                <>
+                                <div className='note border-0 p-0' key={index} onClick={e => setUpdateHandler(note._id, note.noteHeading, note.noteContent, note.noteTags, note.updatedAt.slice(0,10))} style={{ cursor:'pointer', borderRadius:'0px' }}>
+                                    <div className='d-flex pb-1' style={{ alignItems:'center', justifyContent:'space-between' }}>
+                                        <div className='pl-3' style={{ fontWeight:500, fontSize:18, letterSpacing:'1.2px' }}>{note.noteHeading}</div>
+                                        <div className='pl-3 updatedTr' style={{ fontWeight:500, fontSize:13 }}>{getDate(note.updatedAt.slice(0,10))}</div>
+                                    </div>
+                                    <div className='pl-3 pb-1' style={{ fontWeight:500, fontSize:15, color:'#6c6c6c' }}>{note.noteContent.replace(/<\/?[^>]+(>|$)/g, "").split(' ').slice(0,10).join(' ')}...</div>
+                                </div>
+                                <hr/>
+                                </>
+                            ))}
+                        </div>
+                    </div>
+                    :
+                    !userInfo 
+                    ?<Message variant='danger' message="Please login to view you notes" /> 
+                    :
+                    <div className='noNotes'>Your notes will appear here.</div>
                     }
                 </div>
                 <div className='rightPanel'>
@@ -247,8 +273,8 @@ export const HomeScreen = ({ history }) => {
                     {successDelete && <Message message="Deleted successfully" variant="success" />}
                     {!userInfo 
                     ?<Message variant='danger' message="Please login to add note" /> 
-                    : addNote || update 
-                    ? <Form>
+                    : (addNote || update) 
+                    && <Form>
                         <Form.Label style={{ padding:'0.5rem 0.3rem 0.5rem 0.7rem', width:'100%' }} className='headingRight'>
                             <div className='headingRightOne'>
                                 <div style={{ fontWeight:'500', fontSize:'1.29rem' }}>
@@ -291,12 +317,12 @@ export const HomeScreen = ({ history }) => {
                         <input type='file' accept='image/*' id='inputimage' style={{ display:'none' }} onChange={uploadHandler} />
                         <ReactQuill modules={modules} readOnly={!addNote && !update} value={noteContent} id="print" onChange={e => setNoteContent(e)}></ReactQuill>
                     </Form>
-                    :<Tooltip placement="top" title="Add New Note">
+                    }
+                    <Tooltip placement="top" title="Add New Note">
                         <div style={{ borderRadius:'50%', position:'fixed', bottom:'2rem', right:"2rem", backgroundColor:'#ececec', border:'1px solid rgb(210,210,210)', padding:'0.4rem', cursor:'pointer', boxShadow:'1px 1px 3px gray' }}>
                             <AddIcon style={{ fontSize:"2rem" }} onClick={e => newNoteHandler(e)} />
                         </div>
                     </Tooltip> 
-                    }
                 </div>   
             </div>
         </div>
