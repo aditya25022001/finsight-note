@@ -289,12 +289,12 @@ export const HomeScreen = ({ history }) => {
                         <h3 style={{ color:'' }}>Click on the icon to add note</h3>
                         <Tooltip placement="top" title="Add New Note">
                             <div style={{ borderRadius:'50%', position:'fixed', bottom:'1rem', right:"1rem", backgroundColor:'#ececec', border:'1px solid rgb(210,210,210)', padding:'0.4rem', cursor:'pointer', boxShadow:'1px 1px 3px gray' }}>
-                                <Image src='./create.ico' width={31} height={31} onClick={e => newNoteHandler(e)} />
+                                <Image src='./favicon.ico' width={31} height={31} onClick={e => newNoteHandler(e)} />
                             </div>
                         </Tooltip> 
                     </div>
                     :<Link to="/note" style={{ borderRadius:'50%', position:'fixed', bottom:'1rem', right:"1rem", backgroundColor:'#ececec', border:'1px solid rgb(210,210,210)', padding:'0.4rem', cursor:'pointer', boxShadow:'1px 1px 3px gray', color:'black' }}>
-                        <Image src='./create.ico' width={31} height={31} />
+                        <Image src='./favicon.ico' width={31} height={31} />
                     </Link> 
                     }
                 </div>   

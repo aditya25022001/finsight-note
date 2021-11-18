@@ -26,7 +26,7 @@ app.use('/api/auth',authRoutes)
 
 app.use('/api/note',noteRoutes)
 
-if(NODE_ENV==='PRODUCTION'){
+if(NODE_ENV==='production'){
     app.get('/api/detail',(req,res) => res.sendFile(path.resolve(dirname, 'backend', 'templates', 'index.html')))
     app.use(express.static(path.join(dirname,'/client/build')))
     app.get('*',(req,res) => {
