@@ -10,6 +10,7 @@ import { showNotesAction } from '../reducers/notes/showNoteSlice'
 import { logoutAction } from '../reducers/users/loginSlice'
 import { Link } from 'react-router-dom';
 import { debounce } from 'lodash'
+import GitHubIcon from '@material-ui/icons/GitHub';
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete';
 import PrintIcon from '@material-ui/icons/Print';
@@ -298,6 +299,13 @@ export const HomeScreen = ({ history }) => {
                     }
                 </div>   
             </div>
+            <a href='https://github.com/aditya25022001/note-down/tree/responsive' target='_blank' rel='noopener noreferrer' style={{ color:'black' }}>
+                <div style={{ backgroundColor:'#ececec', border:'1px solid rgb(210,210,210)', padding:'0.4rem', cursor:'pointer', boxShadow:'1px 1px 3px gray', borderRadius:'50%', position:'fixed', bottom:'1rem', left:'5rem', zIndex:'600' }}>
+                    <Tooltip title="View Source" placement="top">
+                        <GitHubIcon style={{ fontSize:'2rem' }} />
+                    </Tooltip>
+                </div>
+            </a>
         </div>
     )
 }

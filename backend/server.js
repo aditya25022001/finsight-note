@@ -20,11 +20,22 @@ const app = express()
 
 app.use(express.json())
 
+app.use(express.static(path.join(dirname,'/templates')))
+
 app.use('/api/auth',authRoutes)
 
 app.use('/api/note',noteRoutes)
 
-app.get('/',(req,res) => res.send('Hello World'))
+if(NODE_ENV==='PRODUCTION'){
+    app.get('/api/detail',(req,res) => res.sendFile(path.resolve(dirname, 'backend', 'templates', 'index.html')))
+    app.use(express.static(path.join(dirname,'/client/build')))
+    app.get('*',(req,res) => {
+        res.sendFile(path.resolve(dirname, 'client', 'build', 'index.html'))
+    })
+}
+else{
+    app.get('/',(req,res) => res.sendFile(path.resolve(dirname, 'backend', 'templates', 'index.html')))
+}
 
 app.use(notFound)
 

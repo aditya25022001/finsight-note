@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css' integrity='sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l' crossorigin='anonymous'/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body class='p-4'>
+        <h3 class='border-bottom pb-2'>Note Taking App Server</h3>        
+        <p>
+            This is the server of my mini project note taking app. 
+        </p>
+        <p>
+            The following are the routes of the api 
+        </p>
+        <table class='table table-responsive'>
+            <thead class='thead-dark'>
+                <tr>
+                    <th>Method</th>
+                    <th>Route</th>
+                    <th>Parameters</th>
+                    <th>Access</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class='table-warning'>
+                    <td>POST</td>
+                    <td>/api/auth/register</td>
+                    <td>body : JSON{name, email, password}</td>
+                    <td>Public</td>
+                    <td>A route for user to register</td>
+                </tr>
+                <tr class='table-warning'>
+                    <td>POST</td>
+                    <td>/api/auth/login</td>
+                    <td>body : JSON{email, password}</td>
+                    <td>Public</td>
+                    <td>A route for user to login</td>
+                </tr>
+                <tr class='table-success'>
+                    <td>GET</td>
+                    <td>/api/note/getnotes</td>
+                    <td>headers : Authorization : Bearer token</td>
+                    <td>Private</td>
+                    <td>A route for user to get all notes</td>
+                </tr>
+                <tr class='table-primary'>
+                    <td>PUT</td>
+                    <td>/api/note/updatenote</td>
+                    <td class='pb-0'>
+                        <ul>
+                            <li>headers : Authorization : Bearer token</li>
+                            <li>body : JSON{id, heading, content, tags}</li>
+                        </ul>
+                    </td>
+                    <td>Private</td>
+                    <td>A route for user to update a particular note</td>
+                </tr>
+                <tr class='table-danger'>
+                    <td>DELETE</td>
+                    <td>/api/note/deletenote/id</td>
+                    <td>param : id</td>
+                    <td>Private</td>
+                    <td>A route for user to delete a note with id</td>
+                </tr>
+                <tr class='table-warning'>
+                    <td>POST</td>
+                    <td>/api/note/add</td>
+                    <td class='pb-0'>
+                        <ul>
+                            <li>headers : Authorization : Bearer token</li>
+                            <li>body : JSON{heading, content, tags}</li>
+                        </ul>
+                    </td>
+                    <td>Private</td>
+                    <td>A route for user to add a note</td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
