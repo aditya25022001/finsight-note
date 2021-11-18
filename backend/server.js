@@ -20,13 +20,11 @@ const app = express()
 
 app.use(express.json())
 
-app.use(express.static(dirname+'/backend/static'))
-
 app.use('/api/auth',authRoutes)
 
 app.use('/api/note',noteRoutes)
 
-app.get('/',(req,res) => res.render('index.html'))
+app.get('/',(req,res) => res.send('Hello World'))
 
 app.use(notFound)
 
