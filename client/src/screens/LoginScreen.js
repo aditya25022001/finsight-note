@@ -28,6 +28,7 @@ export const LoginScreen = ({ history }) => {
             {error && <Message variant='danger' message={error} /> }
             <Form onSubmit={loginHandler} className='mx-auto border py-4 px-3 mt-5 rounded formComponent' style={{ width:'30%' }}>
                 <h3 className='mt-0 ml-2 mb-2'>Login</h3>
+                <div className='pl-2 font-weight-light'>Login to continue to your notes dashboard.</div>
                 <Form.Group className='m-2 mt-3'>
                     <Form.Label>Email</Form.Label>
                     <Form.Control style={{ boxShadow:'none' }} type="email" value={email} onChange={e => setEmail(e.target.value)} inputMode="email" placeholder="Email" required />

@@ -13,6 +13,7 @@ const register = asyncHandler(async(req,res)=>{
                 name:user.name,
                 email:user.email,
                 notes:user.notes,
+                created:user.createdAt,
                 token: generateToken(user._id),
             })
         }
@@ -35,6 +36,7 @@ const login = asyncHandler(async(req, res) => {
                 name:userExists.name,
                 email:userExists.email,
                 notes:userExists.notes,
+                created:userExists.createdAt,
                 token: generateToken(userExists._id),
             })           
         }

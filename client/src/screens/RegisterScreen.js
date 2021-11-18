@@ -30,6 +30,7 @@ export const RegisterScreen = ({ history }) => {
             {error && <Message variant='danger' message={error} /> }
             <Form onSubmit={registerHandler} className='mx-auto border py-4 px-3 mt-5 rounded formComponent' style={{ width:'30%' }}>
                 <h3 className='mt-0 ml-2 mb-2'>Register</h3>
+                <div className='pl-2'>New to writing notes? Start your journey by registering here.</div>
                 <Form.Group className='m-2 mt-3'>
                     <Form.Label>Name</Form.Label>
                     <Form.Control style={{ boxShadow:'none' }} value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Name" required />

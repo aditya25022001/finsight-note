@@ -184,7 +184,7 @@ export const HomeScreen = ({ history }) => {
                 <div className='leftPanel' style={{ borderRight:'1px solid rgb(235, 235, 235)' }}>
                     <Navbar fixed="top" className='d-flex w-100 searchBar' style={{ alignItems:'center' }} >
                         <div style={{ flex:1, padding:'4px 16px' }}>
-                            <div style={{ fontWeight:'800', fontSize:'1.3rem' }}>Welcome back {userInfo && userInfo.name.split(' ')[0]}!</div>
+                            <div style={{ fontWeight:'800', fontSize:'1.3rem' }}>Welcome {userInfo && userInfo.created.slice(0,10)<(new Date()).toISOString().split('T')[0] && 'back'} {userInfo && userInfo.name.split(' ')[0]}!</div>
                         </div>
                     </Navbar>
                     {loadingDelete || loadingShow
@@ -234,7 +234,7 @@ export const HomeScreen = ({ history }) => {
                     !userInfo 
                     ?<Message variant='danger' message="Please login to view you notes" /> 
                     :
-                    <div>No notes until now</div>
+                    <div className='p-4 h5'>No notes until now</div>
                     }
                 </div>
                 <div className='rightPanel'>
