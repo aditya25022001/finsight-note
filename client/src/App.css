@@ -39,7 +39,7 @@ input:disabled::placeholder{
 }
 .note{
   padding: 8px 17px 8px 4px !important;
-  background-color:whitesmoke;
+  background-color:#f8f6f6;
   letter-spacing: 0.8px;
   margin:0.3rem 3px 0.3rem 0px !important;
 }
@@ -57,7 +57,7 @@ a:hover{
 .note:hover>.notelink{
   color: white !important;
 }
-.note:hover > div>div.noteContent{
+.note:hover > div.noteContent{
   color:white !important;
 }
 .note:hover>div>div.updatedTr, .note:hover>a>div>div.updatedTr{
@@ -73,8 +73,11 @@ a:hover{
   border: none !important;
   font-size:15px !important;
 }
-.ql-formats{
-  margin:auto 8px !important;
+.ql-header>.ql-picker-label>svg{
+  margin-top:-0.5rem !important;
+}
+.ql-formats>button{
+  margin:auto 4px !important;
 }
 .ql-syntax{
   background-color: #f6f6f6 !important;

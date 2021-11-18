@@ -163,12 +163,7 @@ export const HomeScreen = ({ history }) => {
     const modules = useMemo(() => ({
         toolbar: {
           container: [
-            [{ header: [1, 2, 3, 4, 5, 6] }],
-            ['bold', 'italic', 'underline'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['image', 'code-block'],
-            ['link'],
-             [{'color': ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466", 'custom-color']}]
+            [{ header: [1, 2, 3, 4, 5, 6] },'bold', 'italic', 'underline', 'strike',{ list: 'ordered' }, { list: 'bullet' }, 'code-block','blockquote','link',{'color': ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466", 'custom-color']}],
           ],
         }
       }), [])
@@ -289,8 +284,8 @@ export const HomeScreen = ({ history }) => {
                         <ReactQuill modules={modules} readOnly={!addNote && !update} value={noteContent} id="print" onChange={e => setNoteContent(e)}></ReactQuill>
                     </Form>
                     :window.innerWidth>=600 
-                    ?<div className='m-auto p-3' style={{ backgroundColor:'whitesmoke', height:'100%', width:'100%' }}>
-                        <h3 style={{ color:'#808080' }}>Click on icon to add note</h3>
+                    ?<div className='m-auto p-3' style={{ backgroundColor:'#f8f6f6', height:'100%', width:'100%' }}>
+                        <h3 style={{ color:'' }}>Click on the icon to add note</h3>
                         <Tooltip placement="top" title="Add New Note">
                             <div style={{ borderRadius:'50%', position:'fixed', bottom:'1rem', right:"1rem", backgroundColor:'#ececec', border:'1px solid rgb(210,210,210)', padding:'0.4rem', cursor:'pointer', boxShadow:'1px 1px 3px gray' }}>
                                 <Image src='./create.ico' width={31} height={31} onClick={e => newNoteHandler(e)} />
