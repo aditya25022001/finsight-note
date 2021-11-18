@@ -12,6 +12,8 @@ connectDB()
 
 const PORT = process.env.PORT || 5001
 
+const NODE_ENV = process.env.NODE_ENV || 'Development'
+
 const dirname = path.resolve()
 
 const app = express()
@@ -30,4 +32,4 @@ app.use(notFound)
 
 app.use(errorHandler)
 
-app.listen(PORT,console.log(`Server running on port - ${PORT}`))
+app.listen(PORT,console.log(`Server running on port - ${PORT} in ${NODE_ENV}`))
