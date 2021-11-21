@@ -7,25 +7,25 @@ import { addNoteAction } from '../reducers/notes/addNoteSlice'
 import { updateNoteAction } from '../reducers/notes/updateNoteSlice'
 import { deleteNoteAction } from '../reducers/notes/deleteNoteSlice'
 import { showNotesAction } from '../reducers/notes/showNoteSlice'
-import { logoutAction } from '../reducers/users/loginSlice'
-import { Link } from 'react-router-dom';
+import { getNoteByIdAction } from '../reducers/notes/getNoteByIdSlice'
+import { Sidebar } from '../components/Sidebar'
 import { debounce } from 'lodash'
+import { useLocation } from 'react-router-dom'
+import converter from 'html-to-markdown'
 import Tooltip from '@material-ui/core/Tooltip'
-import SearchIcon from '@material-ui/icons/Search';
 import LinkIcon from '@material-ui/icons/Link';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PrintIcon from '@material-ui/icons/Print';
-import CreateIcon from '@material-ui/icons/Create';
-import SettingsIcon from '@material-ui/icons/Settings';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
 
 export const HomeScreen = ({ history }) => {
+
+    const searchId = useLocation().search
+    const noteidFromUrl = new URLSearchParams(searchId).get("id") 
 
     const [search, setSearch] = useState("")
     const [noteHeading, setNoteHeading] = useState("")
@@ -44,7 +44,7 @@ export const HomeScreen = ({ history }) => {
     const { userInfo } = userLogin
     
     const userShowNotes = useSelector(state => state.userShowNotes)
-    const { loading:loadingShow, error:errorShow, notes } = userShowNotes
+    const { loading:loadingShow, error:errorShow, notes, success:successShow } = userShowNotes
     
     const userAddNote = useSelector(state => state.userAddNote)
     const { loading, error, success, note } = userAddNote
@@ -55,9 +55,12 @@ export const HomeScreen = ({ history }) => {
     const userDeleteNote = useSelector(state => state.userDeleteNote)
     const { loading:loadingDelete, error:errorDelete, success:successDelete } = userDeleteNote 
 
+    const userGetNoteById = useSelector(state => state.userGetNoteById)
+    const { success:successGetById, note:noteId } = userGetNoteById
+
     useEffect(()=>{
         if(!userInfo){
-            history.push('/')
+            history.push('/login')
         }
         else{
             dispatch(showNotesAction(userInfo._id))
@@ -82,33 +85,38 @@ export const HomeScreen = ({ history }) => {
         }
     }
     
-    const setUpdateHandler = (id, heading, content, tags, date) => {
-        setUpdate(true)
+    const setUpdateHandler = (id) => {
+        history.push({
+            pathname:"/note",
+            search:`id=${id}`
+        })
         setUpdateId(id)
-        setNoteUpdatedAt(getDate(date))
-        setNoteHeading(heading)
-        setNoteContent(content)
-        setShowNoteTags([...tags])
-        setAddNote(true)
+        dispatch(getNoteByIdAction(id))
     }
 
-    const logoutHandler = () => {
-        console.log("logged out")
-        dispatch(logoutAction())
-    }
+    const date = useMemo(() => {new Date()},[])
+
+    const getDate = useCallback((date) => {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        return `${date.slice(8)} ${months[parseInt(date.slice(5,7))-1]}  ${date.slice(2,4)}`
+    },[])
+
+    useEffect(() => {
+        if(successGetById){
+            setUpdate(true)
+            setNoteUpdatedAt(getDate(noteId.updatedAt.slice(0,10)))
+            setNoteHeading(noteId.noteHeading)
+            setNoteContent(noteId.noteContent)
+            setShowNoteTags([...noteId.noteTags])
+            setAddNote(true)
+        }
+    },[successGetById, noteId.noteHeading, noteId.noteContent, noteId.noteTags, getDate, noteId.updatedAt])
     
     if(errorAddNote){
         setTimeout(()=>{
             setErrorAddNote(false)
         },3000)
     }
-
-    const date = new Date()
-
-    const getDate = useCallback((date) => {
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        return `${date.slice(8)} ${months[parseInt(date.slice(5,7))-1]}  ${date.slice(2,4)}`
-    },[])
 
     const printHandler = (divName) => {
         let printContents = document.getElementById(divName).children[1].innerHTML
@@ -159,41 +167,34 @@ export const HomeScreen = ({ history }) => {
     const deleteTagHandler = (tag) => {
         setShowNoteTags(showNoteTags.filter(eachTag => eachTag!==tag))
     }
+    
     const modules = useMemo(() => ({
         toolbar: {
           container: [
             [{ header: [1, 2, 3, 4, 5, 6] },'bold', 'italic', 'underline', { list: 'ordered' }, { list: 'bullet' },'code-block','link',{'color': ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466", 'custom-color']}],
           ],
         }
-      }), [])
+    }), [])
 
-      const uploadHandler = async (e) => {
+    const uploadHandler = async (e) => {
         e.preventDefault();
         console.log(e.target.files[0])
-      }
+    }
+
+    const downLoadhandler = (content) => {
+        console.log(converter.convert(content))
+    }
+
+    useEffect(() => {
+        if(successShow && noteidFromUrl!==undefined){
+            setUpdateId(noteidFromUrl)
+            dispatch(getNoteByIdAction(noteidFromUrl))
+        }
+    },[noteidFromUrl, successShow, dispatch])
 
     return (
         <div className='newHome'>
-            <div className='sidebar' style={{ backgroundColor:'black', width:'max-content', color:'white', height:'100vh !important', alignItems:'center', display:'flex', flexDirection:'column', padding:'0.3rem 0.5rem' }}>
-                <Link to='/' style={{ color:'white', textDecoration:'none' }}>
-                    <div style={{ cursor:'pointer' }} className='my-2 h4'>Nt</div>
-                </Link>
-                <div style={{ cursor:'pointer' }} className='my-2'><CreateIcon /></div>
-                <div style={{ cursor:'pointer' }} className='my-2'><SearchIcon /></div>
-                <div style={{ cursor:'pointer' }} className='my-2'><SettingsIcon /></div>
-                {userInfo && 
-                    <Tooltip title='Logout' placement="right">
-                        <div style={{ cursor:'pointer' }} className='my-2' onClick={logoutHandler}>
-                            <PowerSettingsNewIcon />
-                        </div>
-                    </Tooltip>
-                }
-                {!userInfo && 
-                <Link to="/login" style={{ color:'white' }}>
-                    <div style={{ cursor:'pointer' }} className='my-2'><ExitToAppIcon/></div>
-                </Link>
-                }
-            </div>
+            <Sidebar/>
             <div className='newHomeWrapper'>
                 <div className='leftPanel' style={{ borderRight:'1px solid rgb(235, 235, 235)' }}>
                     <Navbar fixed="top" className='d-flex w-100 searchBar' style={{ flexDirection:'column' }} >
@@ -287,7 +288,7 @@ export const HomeScreen = ({ history }) => {
                             {update && 
                             <div>
                                 {window.innerWidth>600 && <LinkIcon className='mx-2' style={{ fontSize:'1.5rem', cursor:'pointer' }} />}
-                                {window.innerWidth>600 && <GetAppIcon className='mx-2' style={{ fontSize:'1.3rem', cursor:'pointer' }} />}
+                                {window.innerWidth>600 && <GetAppIcon onClick={ e => downLoadhandler(noteContent) } className='mx-2' style={{ fontSize:'1.3rem', cursor:'pointer' }} />}
                                 <DeleteIcon className='mx-2' onClick={e => deleteNoteHandler(e, updateId)} style={{ fontSize:'1.3rem', cursor:'pointer' }} />
                                 {window.innerWidth>600 && <PrintIcon onClick={e => printHandler("print")} className='mx-2' style={{ fontSize:'1.3rem', cursor:'pointer' }} />}
                             </div>}

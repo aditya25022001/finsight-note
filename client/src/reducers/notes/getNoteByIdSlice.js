@@ -25,7 +25,8 @@ const getNoteByIdSlice = createSlice({
     initialState:{
         loading:false,
         error:null,
-        notes:[]
+        note:{},
+        success:false
     },
     extraReducers:{
         [getNoteByIdAction.pending]:(state) => {
@@ -33,9 +34,11 @@ const getNoteByIdSlice = createSlice({
         },
         [getNoteByIdAction.fulfilled]:(state, action) => {
             state.loading=false
-            state.notes=action.payload.notes
+            state.note=action.payload.note
+            state.success=true
         },
         [getNoteByIdAction.rejected]:(state, action) => {
+            state.success=false
             state.loading=false
             state.error= action.payload.message
         }
