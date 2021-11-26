@@ -13,7 +13,7 @@ export const registerAction = createAsyncThunk(
             const { data } = await axios.post('/api/auth/register',{ name,email,password }, config)
             if(data){
                 await axios.post('/api/auth/login',{ email,password }, config)
-                sessionStorage.setItem("userInfo",JSON.stringify(data))
+                localStorage.setItem("userInfo",JSON.stringify(data))
             }
             return data
         } catch (err) {
@@ -27,7 +27,7 @@ export const registerSlice = createSlice({
     initialState:{
         loading: false,
         error:"",
-        userInfo: sessionStorage.getItem('userInfo') ? JSON.parse(sessionStorage.getItem('userInfo')) : null
+        userInfo: localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
     },
     extraReducers:{
         [registerAction.pending]:(state) => {

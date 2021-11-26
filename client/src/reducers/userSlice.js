@@ -13,7 +13,7 @@ export const registerAction = createAsyncThunk(
             const { data } = await axios.post('/api/auth/register',{ name,email,password }, config)
             if(data){
                 await axios.post('/api/auth/login',{ email,password }, config)
-                sessionStorage.setItem("userInfo",JSON.stringify(data))
+                localStorage.setItem("userInfo",JSON.stringify(data))
             }
             return data
         } catch (err) {
@@ -32,7 +32,7 @@ export const loginAction = createAsyncThunk(
         }
         try {
             const { data } = await axios.post('/api/auth/login',{ email, password }, config)
-            sessionStorage.setItem("userInfo",JSON.stringify(data))
+            localStorage.setItem("userInfo",JSON.stringify(data))
             return data
         } catch (err) {
             return rejectWithValue(err.response.data)
@@ -43,7 +43,7 @@ export const loginAction = createAsyncThunk(
 export const logoutAction = createAsyncThunk(
     'user/logout',
     async () => {
-        sessionStorage.removeItem('userInfo')
+        localStorage.removeItem('userInfo')
     }
 )
 
@@ -52,10 +52,10 @@ const userSlice = createSlice({
     initialState:{
         loadingRegister:false,
         errorRegister:null,
-        userInfoRegister:sessionStorage.getItem('userInfo') ? JSON.parse(sessionStorage.getItem('userInfo')) : null,
+        userInfoRegister:localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null,
         loadingLogin:false,
         errorLogin:null,
-        userInfo:sessionStorage.getItem('userInfo') ? JSON.parse(sessionStorage.getItem('userInfo')) : null
+        userInfo:localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
     },
     extraReducers:{
         [registerAction.pending]:(state) => {

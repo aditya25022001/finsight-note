@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
-import { Alert } from 'react-bootstrap'
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
-export const Message = ({ variant, message }) => {
-    const [show, setShow] = useState(true)
-    if(show){
-        setTimeout(()=>{
-            setShow(false)
-        },2000)
+export const Message = ({ message, variant }) => {
+
+    const [open, setOpen] = useState(true)
+
+    const closeHandler = () => {
+        setOpen(false)
     }
+
     return (
-        <>
-            {show && <div style={{ width:'max-content' }} className='mx-auto alertMessage'>
-                <Alert variant={variant}>{message}</Alert>            
-            </div>}
-        </>
+        <Snackbar open={open} autoHideDuration={3000} onClose={closeHandler}>
+            <Alert severity={variant} variant='filled'>{message}</Alert>
+        </Snackbar>
     )
 }

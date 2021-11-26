@@ -9,6 +9,7 @@ const addNote = asyncHandler(async(req, res) => {
         noteContent: content,
         noteTags: tags,
         user: req.user._id,
+        usersEdit: [req.user.email]
     })
     const createNote = await newNote.save()
     const user = await User.findById(req.user._id)
@@ -27,7 +28,8 @@ const addNote = asyncHandler(async(req, res) => {
         noteHeading:createNote.noteHeading,
         noteContent : createNote.noteContent,
         noteTags : createNote.noteTags,
-        updatedAt : createNote.updatedAt
+        updatedAt : createNote.updatedAt,
+        usersEdit:createNote.usersEdit
     })
 })
 
@@ -54,6 +56,7 @@ const updateNote = asyncHandler(async(req, res) => {
         note.noteHeading = heading || note.noteHeading
         note.noteContent = content || note.noteContent
         note.noteTags = tags || note.noteTags
+        note.usersEdit= note.usersEdit
         note.user = note.user
         const updatedNote = await note.save()
         if(updatedNote){
@@ -113,4 +116,31 @@ const getNoteById = asyncHandler(async(req, res) => {
     }
 })
 
-export { addNote, getNotes, updateNote, deleteNote, getNoteById }
+const shareNote = asyncHandler(async(req, res) => {
+    const { fromEmail, toEmails, id, link, access } = req.body
+    const note = await Note.findById(id)
+    if(note && access==="Can edit"){
+        note.noteHeading = note.noteHeading
+        note.noteContent = note.noteContent
+        note.noteTags = note.noteTags
+        note.usersEdit = Array.from(new Set([...note.usersEdit, ...toEmails]))
+        note.user = note.user
+        const updatedNote = await note.save()
+        if(updatedNote){
+            res.status(200).json({
+                message:"Shared successfully",
+                id : updatedNote._id,
+                user : updatedNote.user,
+                from:fromEmail,
+                link:link 
+            })
+        }
+    }
+    else{
+        res.status(404).json({
+            message:"Note not found"
+        })
+    }
+})
+
+export { addNote, getNotes, updateNote, deleteNote, getNoteById, shareNote }

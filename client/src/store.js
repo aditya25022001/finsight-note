@@ -6,6 +6,7 @@ import showNotesReducer from './reducers/notes/showNoteSlice'
 import deleteNoteReducer from './reducers/notes/deleteNoteSlice'
 import updateNoteReducer from './reducers/notes/updateNoteSlice'
 import getNoteByIdReducer from './reducers/notes/getNoteByIdSlice'
+import shareNoteReducer from './reducers/notes/shareNoteSlice'
 
 export const store = configureStore({
     reducer:{
@@ -15,6 +16,7 @@ export const store = configureStore({
         userShowNotes : showNotesReducer,
         userDeleteNote : deleteNoteReducer,
         userUpdateNote : updateNoteReducer,
-        userGetNoteById : getNoteByIdReducer
+        userGetNoteById : getNoteByIdReducer,
+        userShareNote : shareNoteReducer
     }
 })

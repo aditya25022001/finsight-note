@@ -45,7 +45,7 @@ export const SidePanel = ({ history }) => {
         setNoteContent(content)
         setShowNoteTags([...tags])
     }
-    const delayedQuery = useCallback(debounce((updateId, noteHeading, noteContent, showNoteTags) => dispatch(updateNoteAction({id:updateId, heading:noteHeading, content:noteContent, tags:showNoteTags})),500),[])
+    const delayedQuery = useCallback(debounce((updateId, noteHeading, noteContent, showNoteTags) => dispatch(updateNoteAction({id:updateId, heading:noteHeading, content:noteContent, tags:showNoteTags})),300),[])
 
     useEffect(()=>{
         if(update){
@@ -64,7 +64,7 @@ export const SidePanel = ({ history }) => {
             <Navbar fixed="top" className='d-flex w-100 searchBarSidePanel' style={{ alignItems:'center', height:'max-content', backgroundColor:'green' }} >
                 <div style={{ flex:1 }} className='ml-2'>
                     <Dropdown>
-                        <Dropdown.Toggle style={{ boxShadow:'none !important' }} variant="secondary" id="dropdown-basic">
+                        <Dropdown.Toggle style={{ boxShadow:'none !important' }} className='border' variant="secondary" id="dropdown-basic">
                             {noteHeading || "Select Note"}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>

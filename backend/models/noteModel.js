@@ -6,6 +6,10 @@ const noteSchema = mongoose.Schema({
         required:true,
         ref:'UserNote'
     },
+    usersEdit:[{
+        type:String,
+        unique:true
+    }],
     noteHeading:{
         type:String,
         required:true,

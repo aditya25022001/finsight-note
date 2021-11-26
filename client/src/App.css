@@ -23,6 +23,25 @@ input:disabled {
 input:disabled::placeholder{
   color: gray !important;
 }
+li.MuiMenuItem-root{
+  font-size:0.8rem !important;
+}
+div.MuiInput-underline::before{
+  border-bottom: none !important;
+}
+option:hover{
+  background-color:#ececec !important;
+  color:black !important;
+}
+.copyurl:hover{
+  color: black !important;
+}
+.invite{
+  box-shadow: none !important;
+}
+.invite:focus{
+  border:1px solid rgb(156, 156, 156) !important;
+}
 .note{
   padding: 8px 8px !important;
   background-color:white;
@@ -189,13 +208,18 @@ li{
 .disabledform{
   color: gray !important;
 }
-.dropdown-toggle, .btn-secondary, .btn-secondary:hover{
+.dropdown-toggle, .btn-secondary, .btn-secondary:hover,.btn-secondary:active,.btn-secondary:focus{
   box-shadow: none !important;
+  border: 1px solid rgb(202, 202, 202) !important;
+  background-color:#ececec !important;
+  color:black;
   width: 100% !important;
-  /* border:1px solid #b1b1b1 !important;
-  background-color:white;
-  color: black; */
   text-align: left !important;
+  align-items: center !important;
+}
+.dropdown-toggle::after, .btn-secondary::after, .btn-secondary::after{
+  float:right !important;
+  margin-top: 0.6rem;
 }
 .dropdown-menu{
   width: 100%;
