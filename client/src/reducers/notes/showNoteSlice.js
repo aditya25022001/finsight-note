@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const apiBaseURL = "https://notestuff.onrender.com"
+
 export const showNotesAction = createAsyncThunk(
     'user/showNotes',
     async (id,{rejectWithValue, getState}) => {
@@ -12,7 +14,7 @@ export const showNotesAction = createAsyncThunk(
             }
         }
         try {
-            const { data } = await axios.get('/api/note/getnotes',config)
+            const { data } = await axios.get(`${apiBaseURL}/api/note/getnotes`,config)
             return data
         } catch (error) {
             return rejectWithValue(error.response.data)            

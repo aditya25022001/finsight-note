@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
+const apiBaseURL = "https://notestuff.onrender.com"
+
 export const loginAction = createAsyncThunk(
     'user/login',
     async ({email, password},{ rejectWithValue }) => {
@@ -10,7 +12,7 @@ export const loginAction = createAsyncThunk(
             }
         }
         try {
-            const { data } = await axios.post('/api/auth/login',{ email, password }, config)
+            const { data } = await axios.post(`${apiBaseURL}/api/auth/login`,{ email, password }, config)
             localStorage.setItem("userInfo",JSON.stringify(data))
             return data
         } catch (err) {

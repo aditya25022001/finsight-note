@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
+const apiBaseURL = "https://notestuff.onrender.com"
+
 export const addNoteAction = createAsyncThunk(
     'user/addnote',
     async ({heading, content, tags},{rejectWithValue, getState}) => {
@@ -12,7 +14,7 @@ export const addNoteAction = createAsyncThunk(
             }
         }
         try {
-            const { data } = await axios.post('/api/note/add',{ heading, content, tags },config)
+            const { data } = await axios.post(`${apiBaseURL}/api/note/add`,{ heading, content, tags },config)
             return data
         } catch (error) {
             return rejectWithValue(error.response.data)

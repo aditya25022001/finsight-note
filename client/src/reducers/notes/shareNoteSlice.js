@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
+const apiBaseURL = "https://notestuff.onrender.com"
+
 export const shareNoteAction = createAsyncThunk(
     'user/sharenote',
     async ({ fromEmail, toEmails, link, id, access }, { rejectWithValue, getState }) => {
@@ -12,7 +14,7 @@ export const shareNoteAction = createAsyncThunk(
             }
         }
         try {
-            const { data } = await axios.put(`/api/note/sharenote`, { fromEmail, toEmails, link, id, access } ,config) 
+            const { data } = await axios.put(`${apiBaseURL}/api/note/sharenote`, { fromEmail, toEmails, link, id, access } ,config) 
             return data
         } catch (error) {
             return rejectWithValue(error.response.data) 

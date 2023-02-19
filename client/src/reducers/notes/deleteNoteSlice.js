@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
+const apiBaseURL = "https://notestuff.onrender.com"
+
 export const deleteNoteAction = createAsyncThunk(
     'user/deletenote',
     async (id, { rejectWithValue, getState }) => {
@@ -12,7 +14,7 @@ export const deleteNoteAction = createAsyncThunk(
             }
         }
         try {
-            const { data } = await axios.delete(`/api/note/deletenote/${id}`, config) 
+            const { data } = await axios.delete(`${apiBaseURL}/api/note/deletenote/${id}`, config) 
             return data
         } catch (error) {
             return rejectWithValue(error.response.data) 
