@@ -5,6 +5,7 @@ import connectDB from './config/db.js'
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js'
 import authRoutes from './routes/authRoutes.js'
 import noteRoutes from './routes/noteRoutes.js'
+import cors from 'cors'
 
 dotenv.config()
 
@@ -17,6 +18,11 @@ const NODE_ENV = process.env.NODE_ENV || 'Development'
 const dirname = path.resolve()
 
 const app = express()
+
+app.use(cors({
+    origin:process.env.ALLOWED.split(" "),
+    methods:["GET","PUT","POST","DELETE","PATCH"]
+}))
 
 app.use(express.json())
 
